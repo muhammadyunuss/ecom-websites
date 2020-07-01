@@ -8,12 +8,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Katalog</h1>
+          <h1>Catalogues</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Kategori</li>
+            <li class="breadcrumb-item active">Categories</li>
           </ol>
         </div>
       </div>
@@ -34,8 +34,8 @@
         @endif
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Kategori</h3>
-            <a href="{{ url('admin/add-edit-category') }}" style="max-width: 150px; float:right; display:block;" class="btn btn-block btn-success">Tambah Kategori</a>
+            <h3 class="card-title">Category</h3>
+            <a href="{{ url('admin/add-edit-category') }}" style="max-width: 150px; float:right; display:block;" class="btn btn-block btn-success">add Category</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -43,18 +43,18 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Kategori</th>
-                  <th>Kategori Utama</th>
-                  <th>Bagian</th>
+                  <th>Category</th>
+                  <th>Parent Category</th>
+                  <th>Section</th>
                   <th>URL</th>
                   <th>Status</th>
-                  <th>Aksi</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($categories as $category)
                 @if(!isset($category->parentcategory->category_name))
-                <?php $parent_category = "Utama"; ?>
+                <?php $parent_category = "Root"; ?>
                 @else
                 <?php $parent_category = $category->parentcategory->category_name; ?>
                 @endif
@@ -65,15 +65,15 @@
                   <td>{{ $category->section->name }}</td>
                   <td>{{ $category->url }}</td>
                   <td>@if($category->status==1)
-                    <i class="fas fa-check-circle" style="color: #51cf66;"></i><a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"> Aktif</a>
+                    <i class="fas fa-check-circle" style="color: #51cf66;"></i><a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"> Active</a>
                     @else
-                    <i class="fas fa-times-circle" style="color: #ff6b6b;"></i><a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"> Tidak Aktif</a>
+                    <i class="fas fa-times-circle" style="color: #ff6b6b;"></i><a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"> Inactive</a>
                     @endif
                   </td>
                   <td>
-                    <a href="{{ url('admin/add-edit-category/'.$category->id) }}">Ubah</a>
+                    <a href="{{ url('admin/add-edit-category/'.$category->id) }}">Edit</a>
                     &nbsp; &nbsp;
-                    <a class="confirmDelete" record="category" recordid="{{ $category->id }}" href="javascript:void(0)" <?php /*href="{{ url('admin/delete-category/'.$category->id) }}" */ ?>>Hapus</a>
+                    <a class="confirmDelete" record="category" recordid="{{ $category->id }}" href="javascript:void(0)" <?php /*href="{{ url('admin/delete-category/'.$category->id) }}" */ ?>>Delete</a>
                   </td>
                 </tr>
                 @endforeach

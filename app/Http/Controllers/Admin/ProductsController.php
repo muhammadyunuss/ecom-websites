@@ -42,7 +42,7 @@ class ProductsController extends Controller
     public function deleteProduct($id){
         Product::where('id',$id)->delete();
 
-        $message = "Produk berhasil Di Hapus!";
+        $message = "Product Deleted successfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }
@@ -52,7 +52,7 @@ class ProductsController extends Controller
             $title = "Add Product";
             $product = new Product;
             $productdata = array();
-            $message = "Product added successfuly!";
+            $message = "Product added successfully!";
         }else{
             $title = "Edit Product";
             $productdata = Product::find($id);
@@ -74,15 +74,15 @@ class ProductsController extends Controller
                 'product_color' => 'required|regex:/^[\pL\s\-]+$/u',
             ];
             $customMessages = [
-                'category_id.required' => 'Nama Kategori Wajib Di Isi',
-                'product_name.required' => 'Nama Produk Wajib Di Isi',
-                'product_name.regex' => 'Diperlukan Nama Produk Yang Benar',
-                'product_code.required' => 'Nama Kode Produk Wajib Di Isi',
-                'product_code.regex' => 'Diperlukan Kode Produk Yang Benar',
-                'product_price.required' =>'Harga Produk Wajib Di Isi',
-                'product_price.numeric' =>'Diperlukan Harga Produk Yang Benar',
-                'product_color.required' =>'Warna Produk Wajib Di Isi',
-                'product_color.regex' =>'Diperlukan Warna Produk Yang Benar',
+                'category_id.required' => 'Category is required',
+                'product_name.required' => 'Product Name is required',
+                'product_name.regex' => 'Valid Product Name is required',
+                'product_code.required' => 'Product Code is required',
+                'product_code.regex' => 'Valid Product Code is required',
+                'product_price.required' =>'Product Price is required',
+                'product_price.numeric' =>'Valid Product Price is required',
+                'product_color.required' =>'Product Color is required',
+                'product_color.regex' =>'Valid Product Color is required',
             ];
             $this->validate($request,$rules,$customMessages);
 
@@ -256,7 +256,7 @@ class ProductsController extends Controller
         // Hapus produk gambar dari kategori tabel
         Product::where('id',$id)->update(['main_image'=>'']);
 
-        $message = "Gambar Produk berhasil Di Hapus!";
+        $message = "Image Product deleted successfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }
@@ -276,7 +276,7 @@ class ProductsController extends Controller
         // Hapus produk gambar dari kategori tabel
         Product::where('id',$id)->update(['product_video'=>'']);
 
-        $message = "Video Produk berhasil Di Hapus!";
+        $message = "Video Product deleted successfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }

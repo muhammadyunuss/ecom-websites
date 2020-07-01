@@ -8,12 +8,13 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Katalog</h1>
+          <h1>Catalogues</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Kategori</li>
+            <li class="breadcrumb-item"><a href="#">Categories</a></li>
+            <li class="breadcrumb-item active">{{$title}}</li>
           </ol>
         </div>
       </div>
@@ -55,8 +56,8 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="category_name">Nama Kategori</label>
-                  <input type="text" class="form-control" name="category_name" id="category_name" placeholder="Masukan Nama Kategori" @if(!empty($categorydata['category_name'])) value="{{ $categorydata['category_name'] }}" @else value="{{ old('category_name') }}" @endif>
+                  <label for="category_name">Category Name</label>
+                  <input type="text" class="form-control" name="category_name" id="category_name" placeholder="Enter Category Name" @if(!empty($categorydata['category_name'])) value="{{ $categorydata['category_name'] }}" @else value="{{ old('category_name') }}" @endif>
                 </div>
                 <div id="appendCategoriesLevel">
                   @include('admin.categories.append_categories_level')
@@ -66,15 +67,15 @@
                 </div>
                 @endif
                 <div class="form-group">
-                  <label for="category_discount">Diskon Kategori</label>
-                  <input type="number" class="form-control" id="category_discount" name="category_discount" placeholder="Masukan Diskon Kategori" @if(!empty($categorydata['category_discount'])) value="{{ $categorydata['category_discount'] }}" @else value="{{ old('category_discount') }}" @endif>
+                  <label for="category_discount">Category Discount</label>
+                  <input type="number" class="form-control" id="category_discount" name="category_discount" placeholder="Enter Category Discount" @if(!empty($categorydata['category_discount'])) value="{{ $categorydata['category_discount'] }}" @else value="{{ old('category_discount') }}" @endif>
                 </div>
                 <div class="form-group">
-                  <label>Kategori Deskripsi</label>
-                  <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter ...">@if(!empty($categorydata['description'])) {{ $categorydata['description'] }} @else {{ old('description') }} @endif</textarea>
+                  <label>Category Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter ...">@if(!empty($categorydata['description'])){{ $categorydata['description'] }} @else {{ old('description') }} @endif</textarea>
                 </div>
                 <div class="form-group">
-                  <label>Meta Deskripsi</label>
+                  <label>Meta Description</label>
                   <textarea class="form-control" id="meta_description" name="meta_description" rows="3" placeholder="Enter ...">@if(!empty($categorydata['meta_description'])) {{ $categorydata['meta_description'] }} @else {{ old('meta_description') }} @endif</textarea>
                 </div>
                 <!-- /.form-group -->
@@ -82,9 +83,9 @@
               <!-- /.col -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label>Golongan</label>
+                  <label>Select Section</label>
                   <select name="section_id" id="section_id" class="form-control select2" style="width: 100%;">
-                    <option value="">Select Golongan</option>
+                    <option value="">Select Section</option>
                     @foreach($getSections as $section)
                     <option value="{{ $section->id }}" @if(!empty($categorydata['section_id']) && $categorydata['section_id']==$section->id) selected @endif>
                       {{ $section->name }}</option>
@@ -92,7 +93,7 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputFile">Gambar Kategori</label>
+                  <label for="exampleInputFile">Category Image</label>
                   <div class="input-group">
                     <div class="custom-file">
                       <input type="file" class="custom-file-input" id="category_image" name="category_image">
@@ -111,7 +112,7 @@
                   @endif
                 </div>
                 <div class="form-group">
-                  <label for="url">URL Kategori</label>
+                  <label for="url">Category URL</label>
                   <input type="text" class="form-control" id="url" name="url" placeholder="Masukan URL" @if(!empty($categorydata['url'])) value="{{ $categorydata['url'] }}" @else value="{{ old('url') }}" @endif>
                 </div>
                 <div class="form-group">

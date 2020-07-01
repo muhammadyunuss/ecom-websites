@@ -110,7 +110,7 @@
               <li class="nav-item">
                 <a href="{{ url('admin/categories') }}" class="nav-link {{ $active }}">
                   <i class="nav-icon far fa-circle text-info"></i>
-                  <p>Kategori</p>
+                  <p>Categories</p>
                 </a>
               </li>
               @if(Session::get('page')=="products")

@@ -8,12 +8,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Katalog</h1>
+          <h1>Catalogues</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Produk</li>
+            <li class="breadcrumb-item active">Products</li>
           </ol>
         </div>
       </div>
@@ -34,8 +34,8 @@
         @endif
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Produk</h3>
-            <a href="{{ url('admin/add-edit-product') }}" style="max-width: 150px; float:right; display:block;" class="btn btn-block btn-success">Tambah Produk</a>
+            <h3 class="card-title">Products</h3>
+            <a href="{{ url('admin/add-edit-product') }}" style="max-width: 150px; float:right; display:block;" class="btn btn-block btn-success">Add Product</a>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -43,14 +43,14 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Nama Produk</th>
-                  <th>Kode Produk</th>
-                  <th>Warna Produk</th>
-                  <th>Gambar Produk</th>
-                  <th>Kategori</th>
-                  <th>Bagian</th>
+                  <th>Product Name</th>
+                  <th>Product Code</th>
+                  <th>Product Color</th>
+                  <th>Product Image</th>
+                  <th>Category</th>
+                  <th>Section</th>
                   <th>Status</th>
-                  <th>Aksi</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -66,9 +66,9 @@
                   <td>{{ $product->product_color }}</td>
                   <td>{{ $product->product_code }}</td>
                   <td>
-                    @php
-                        $product_image_path = "image/product_images/small/".$product->main_image;
-                    @endphp
+                    <?php
+                        $product_image_path = "images/product_images/small/".$product->main_image;
+                    ?>
                     @if(!empty($product->main_image) && file_exists($product_image_path))
                     <img style="width:100px;" src="{{ asset('images/product_images/small/'.$product->main_image) }}" alt="">
                     @else
@@ -78,15 +78,15 @@
                   <td>{{ $product->category->category_name }}</td>
                   <td>{{ $product->section->name }}</td>
                   <td>@if($product->status==1)
-                    <i class="fas fa-check-circle" style="color: #51cf66;"></i><a class="updateProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}" href="javascript:void(0)"> Aktif</a>
+                    <i class="fas fa-check-circle" style="color: #51cf66;"></i><a class="updateProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}" href="javascript:void(0)"> Active</a>
                     @else
-                    <i class="fas fa-times-circle" style="color: #ff6b6b;"></i><a class="updateProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}" href="javascript:void(0)"> Tidak Aktif</a>
+                    <i class="fas fa-times-circle" style="color: #ff6b6b;"></i><a class="updateProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}" href="javascript:void(0)"> Inactive</a>
                     @endif
                   </td>
                   <td>
-                    <a href="{{ url('admin/add-edit-product/'.$product->id) }}">Ubah</a>
+                    <a href="{{ url('admin/add-edit-product/'.$product->id) }}">Edit</a>
                     &nbsp; &nbsp;
-                    <a class="confirmDelete" record="product" recordid="{{ $product->id }}" href="javascript:void(0)" <?php /*href="{{ url('admin/delete-product/'.$product->id) }}" */ ?>>Hapus</a>
+                    <a class="confirmDelete" record="product" recordid="{{ $product->id }}" href="javascript:void(0)" <?php /*href="{{ url('admin/delete-product/'.$product->id) }}" */ ?>>Delete</a>
                   </td>
                 </tr>
                 @endforeach

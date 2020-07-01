@@ -130,7 +130,7 @@ $(document).ready(function(){
                 if(resp['status']==0){
                     $("#product-"+product_id).html("<i class='fas fa-times-circle' style='color:#ff6b6b;'></i><a class='updateProductStatus' href='javascript:void(0)'> Inactive</a>");
                 }else if(resp['status']==1){
-                    $("#product-"+product_id).html("<i class='fas fa-check-circle' style='color:#51cf66;'></i><a class='updateProductStatus' href='javascript:void(0)'> Activegi</a>");
+                    $("#product-"+product_id).html("<i class='fas fa-check-circle' style='color:#51cf66;'></i><a class='updateProductStatus' href='javascript:void(0)'> Active</a>");
                 }
             },error:function(){
                 alert("Error");

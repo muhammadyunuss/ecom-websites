@@ -23,7 +23,7 @@ class CategoryController extends Controller
         if($request->ajax()){
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
-            if($data['status']=="Aktif"){
+            if($data['status']=="Active"){
                 $status = 0;
             }else{
                 $status = 1;
@@ -41,7 +41,7 @@ class CategoryController extends Controller
             $category = new Category;
             $categorydata = array();
             $getCategories = array();
-            $message = "Kategori berhasil Ditambahkan!";
+            $message = "Category added sucefully!";
 
         }else{
             // Edit Category Functionality
@@ -52,7 +52,7 @@ class CategoryController extends Controller
             $getCategories = json_decode(json_encode($getCategories),true);
             // echo "<pre>"; print_r($getCategories); die;
             $category = Category::find($id);
-            $message = "Kategori berhasil Di Update!";
+            $message = "Category updated sucessfully!";
 
         }
 
@@ -68,11 +68,11 @@ class CategoryController extends Controller
                 'category_image' => 'image',
             ];
             $customMessages = [
-                'category_name.required' => 'Nama Kategori Wajib Di Isi',
-                'category_name.regex' =>'Diperlukan Nama Yang Benar',
-                'section_id.required' =>'Golongan Wajib Di Isi',
-                'url.required' => 'Diperlukan Kategori URL Yang Benar',
-                'category_image.image' => 'Diperlukan Gambar Yang Benar',
+                'category_name.required' => 'Category Name is required',
+                'category_name.regex' =>'Valid Category Name is reuqired',
+                'section_id.required' =>'Section Name is required',
+                'url.required' => 'Valid URL is required',
+                'category_image.image' => 'Valid Image is required',
             ];
             $this->validate($request,$rules,$customMessages);
         
@@ -161,7 +161,7 @@ class CategoryController extends Controller
         // Hapus kategori gambar dari kategori tabel
         Category::where('id',$id)->update(['category_image'=>'']);
 
-        $message = "Gambar Kategori berhasil Di Hapus!";
+        $message = "Category Image delete sucessfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }
@@ -169,7 +169,7 @@ class CategoryController extends Controller
     public function deleteCategory($id){
         Category::where('id',$id)->delete();
 
-        $message = "Kategori berhasil Di Hapus!";
+        $message = "Category deleted sucessfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }
