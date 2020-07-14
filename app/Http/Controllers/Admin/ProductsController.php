@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Section;
 use App\Product;
 use App\Category;
+use App\ProductsAttribute;
 use Session;
 use Image;
 
@@ -20,7 +21,7 @@ class ProductsController extends Controller
             $query->select('id','name');
         }])->get();
         // $products = json_decode(json_encode($products));
-        // echo "<pre>"; print_r($products); die; 
+        // echo "<pre>"; print_r($products); die;
         return view('admin.products.products')->with(compact('products'));
     }
 
@@ -86,7 +87,7 @@ class ProductsController extends Controller
             ];
             $this->validate($request,$rules,$customMessages);
 
-            
+
             if(empty($data['is_featured'])){
                 $is_featured = "No";
             }else{
@@ -104,7 +105,7 @@ class ProductsController extends Controller
             if(empty($data['sleeve'])){
                 $data['sleeve'] = "";
             }
-            
+
             if(empty($data['fit'])){
                 $data['fit'] = "";
             }
@@ -226,7 +227,7 @@ class ProductsController extends Controller
         // Section with Categories and Sub Categories
         $categories = Section::with('categories')->get();
         $categories = json_decode(json_encode($categories),true);
-        // echo "<pre>"; print_r($categories); die; 
+        // echo "<pre>"; print_r($categories); die;
 
         return view('admin.products.add_edit_product')->with(compact('title','fabricArray','sleeveArray','patternArray','fitArray','occasionArray','categories','productdata'));
     }
@@ -277,6 +278,90 @@ class ProductsController extends Controller
         Product::where('id',$id)->update(['product_video'=>'']);
 
         $message = "Video Product deleted successfully!";
+        session::flash('success_message',$message);
+        return redirect()->back();
+    }
+
+    public function addAttributes(Request $request ,$id){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // dd($data);
+            foreach ($data['sku'] as $key => $value) {
+                if(!empty($value)){
+
+                    // SKU already exist check
+                    $attrCountSKU = ProductsAttribute::where(['sku'=>$value])->count();
+                    if($attrCountSKU>0){
+                        $message = 'SKU already exist. Please add another SKU!';
+                        session::flash('error_message',$message);
+                        return redirect()->back();
+                    }
+
+                    //
+                    $attrCountSize = ProductsAttribute::where(['product_id'=>$id ,'size'=>$data['size'][$key]])->count();
+                    if($attrCountSize>0){
+                        $message = 'Size already exist. Please add another Size!';
+                        session::flash('error_message',$message);
+                        return redirect()->back();
+                    }
+
+                    $attribute = new ProductsAttribute;
+                    $attribute->product_id = $id;
+                    $attribute->sku = $value;
+                    $attribute->size = $data['size'][$key];
+                    $attribute->price = $data['price'][$key];
+                    $attribute->stock = $data['stock'][$key];
+                    $attribute->status = 1;
+                    $attribute->save();
+                }
+            }
+
+            $message = 'Product Attributes added successfully!';
+            session::flash('success_message',$message);
+            return redirect()->back();
+        }
+
+        $productdata = Product::select('id', 'product_name', 'product_code', 'product_color','product_price' ,'main_image')->with('attributes')->find($id);
+        $productdata = json_decode(json_encode($productdata),true);
+
+        $title = "Product Attributes";
+        return view('admin.products.add_attributes')->with(compact('productdata','title'));
+    }
+
+    public function editAttributes(Request $request,$id){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            foreach ($data['attrId'] as $key => $attr) {
+                if (!empty($attr)) {
+                    ProductsAttribute::where(['id'=>$data['attrId'][$key]])->update(['price'=>$data['price'][$key], 'stock'=>$data['stock'][$key]]);
+                }
+            }
+
+            $message = 'Product Attributes has been updated successfully!';
+            session::flash('success_message',$message);
+            return redirect()->back();
+        }
+    }
+
+    public function updateAttributeStatus(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            // echo "<pre>"; print_r($data); die;
+            if($data['status']=="Active"){
+                $status = 0;
+            }else{
+                $status = 1;
+            }
+
+            ProductsAttribute::where('id',$data['attribute_id'])->update(['status'=>$status]);
+            return response()->json(['status'=>$status,'attribute_id'=>$data['attribute_id']]);
+        }
+    }
+
+    public function deleteAttribute($id){
+        ProductsAttribute::where('id',$id)->delete();
+
+        $message = "Attribute has been deleted successfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }

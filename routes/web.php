@@ -23,11 +23,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('/admin')->namespace('Admin')->group(function(){
     // Semua Admin yang akan di definisikan disini :-
-    
+
     Route::match(['get','post'],'/','AdminController@login');
     Route::group(['middleware'=>['admin']],function(){
         Route::get('clock','AdminController@clock');
-        
+
         Route::get('dashboard','AdminController@dashboard');
         Route::get('settings','AdminController@settings');
         Route::get('logout','AdminController@logout');
@@ -54,6 +54,12 @@ Route::prefix('/admin')->namespace('Admin')->group(function(){
         Route::match(['get', 'post'], 'add-edit-product/{id?}','ProductsController@addEditProduct');
         Route::get('delete-product-image/{id}','ProductsController@deleteProductImage');
         Route::get('delete-product-video/{id}','ProductsController@deleteProductVideo');
+
+        // Attributes
+        Route::match(['get', 'post'], 'add-attributes/{id}','ProductsController@addAttributes');
+        Route::post('edit-attributes/{id}','ProductsController@editAttributes');
+        Route::post('update-attribute-status','ProductsController@updateAttributeStatus');
+        Route::get('delete-attribute/{id}','ProductsController@deleteAttribute');
 
 
     });
