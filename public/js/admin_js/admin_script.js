@@ -184,6 +184,34 @@ $(document).ready(function () {
         });
     });
 
+    // Update Attribute Status
+    $(".updateImageStatus").click(function () {
+        var status = $(this).text();
+        var image_id = $(this).attr("image_id");
+        // alert(status);
+        // alert(image_id);
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-image-status',
+            data: {
+                status: status,
+                image_id: image_id
+            },
+            success: function (resp) {
+                // alert(resp['status']);
+                // alert(resp['image_id']);
+                if (resp['status'] == 0) {
+                    $("#image-" + image_id).html("Inactive");
+                } else if (resp['status'] == 1) {
+                    $("#image-" + image_id).html("Active");
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    });
+
     // Products Attributes Add/Remove Script
     $(document).ready(function () {
         var maxField = 10; //Input fields increment limitation

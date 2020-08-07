@@ -8,6 +8,7 @@ use App\Section;
 use App\Product;
 use App\Category;
 use App\ProductsAttribute;
+use App\ProductsImage;
 use Session;
 use Image;
 
@@ -362,6 +363,91 @@ class ProductsController extends Controller
         ProductsAttribute::where('id',$id)->delete();
 
         $message = "Attribute has been deleted successfully!";
+        session::flash('success_message',$message);
+        return redirect()->back();
+    }
+
+    public function addImages(Request $request, $id){
+        if ($request->isMethod('post')) {
+            if($request->hasFile('image')){
+                $images = $request->file('image');
+
+                foreach ($images as $key => $image) {
+                    $productImage = new ProductsImage;
+                    $image_tmp = Image::make($image);
+
+                    // Get Image Extension
+                    $extension = $image->getClientOriginalExtension();
+                    // Generate New Image Name
+                    $imageName = rand(111,99999).time().'.'.$extension;
+                    // Set Paths For small, medium and large Image
+                    $large_image_path = 'images/product_images/large/'.$imageName;
+                    $medium_image_path = 'images/product_images/medium/'.$imageName;
+                    $small_image_path = 'images/product_images/small/'.$imageName;
+                    // Upload Large Image
+                    Image::make($image_tmp)->save($large_image_path); //W;1040 H:1200
+                    // Upload Resize Medium and Small Image
+                    Image::make($image_tmp)->resize(520,600)->save($medium_image_path);
+                    Image::make($image_tmp)->resize(260,300)->save($small_image_path);
+                    // Save Product Main Image in Products table
+                    $productImage->image = $imageName;
+                    $productImage->product_id = $id;
+                    $productImage->status = 1;
+                    $productImage->save();
+                }
+
+                $message = "Product Images has been added successfully!";
+                session::flash('success_message',$message);
+                return redirect()->back();
+            }
+        }
+        $title = "Product Images";
+        $productdata = Product::select('id', 'product_name', 'product_code', 'product_color','product_price' ,'main_image')->with('images')->find($id);
+        $productdata = json_decode(json_encode($productdata),true);
+        return view('admin.products.add_images')->with(compact('title','productdata'));
+    }
+
+    public function updateImageStatus(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            // echo "<pre>"; print_r($data); die;
+            if($data['status']=="Active"){
+                $status = 0;
+            }else{
+                $status = 1;
+            }
+
+            ProductsImage::where('id',$data['image_id'])->update(['status'=>$status]);
+            return response()->json(['status'=>$status,'image_id'=>$data['image_id']]);
+        }
+    }
+
+    public function deleteImage($id){
+        // Get Product Image
+        $productImage = ProductsImage::select('image')->where('id',$id)->first();
+
+        // Get Produk Image Path
+        $small_image_path = 'images/product_images/small';
+        $medium_image_path = 'images/product_images/medium';
+        $large_image_path = 'images/product_images/large';
+
+        // Delete Product Image From product_images folder if exist
+        if(file_exists($small_image_path.$productImage->image)){
+            unlink($small_image_path.$productImage->image);
+        }
+
+        if(file_exists($medium_image_path.$productImage->image)){
+            unlink($medium_image_path.$productImage->image);
+        }
+
+        if(file_exists($large_image_path.$productImage->image)){
+            unlink($large_image_path.$productImage->image);
+        }
+
+        // Hapus produk gambar dari kategori tabel
+        ProductsImage::where('id',$id)->delete();
+
+        $message = "Product image has been deleted successfully!";
         session::flash('success_message',$message);
         return redirect()->back();
     }

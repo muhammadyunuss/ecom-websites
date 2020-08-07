@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\ProducrsImage;
+use App\ProductsImage;
 
 class ProductsImagesTableSeeder extends Seeder
 {
@@ -13,7 +13,9 @@ class ProductsImagesTableSeeder extends Seeder
     public function run()
     {
         $productImageRecorcds = [
-            ['id'=> 1, 'product_id'=> 1, 'image'=> 'Edit 4.png', 'status'=> 1,]
+            ['id'=> 1, 'product_id'=> 1, 'image'=> 'plain-blue-tshirts-500x500.jpg-9217.jpg', 'status'=> 1,]
         ];
+
+        ProductsImage::insert($productImageRecorcds);
     }
 }
