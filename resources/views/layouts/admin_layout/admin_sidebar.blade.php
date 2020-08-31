@@ -91,46 +91,46 @@
             </a>
             <ul class="nav nav-treeview">
             @if(Session::get('page')=="sections")
-              <?php $active = "active"; ?>
+              <?php $active = "active"; $text_info = "text-info";?>
             @else
-                <?php $active = ""; ?>
+                <?php $active = ""; $text_info = ""?>
             @endif
               <li class="nav-item">
                 <a href="{{ url('admin/sections') }}" class="nav-link {{ $active }}">
-                  <i class="nav-icon far fa-circle text-info"></i>
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
                   <p>Sections</p>
                 </a>
               </li>
               @if(Session::get('page')=="brands")
-                <?php $active = "active"; ?>
+                <?php $active = "active"; $text_info = "text-info";?>
               @else
-                  <?php $active = ""; ?>
+                  <?php $active = ""; $text_info = ""?>
               @endif
               <li class="nav-item">
                 <a href="{{ url('admin/brands') }}" class="nav-link {{ $active }}">
-                  <i class="nav-icon far fa-circle text-info"></i>
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
                   <p>Brands</p>
                 </a>
               </li>
               @if(Session::get('page')=="categories")
-                <?php $active = "active"; ?>
+                <?php $active = "active"; $text_info = "text-info";?>
               @else
-                  <?php $active = ""; ?>
+                  <?php $active = ""; $text_info = ""?>
               @endif
               <li class="nav-item">
                 <a href="{{ url('admin/categories') }}" class="nav-link {{ $active }}">
-                  <i class="nav-icon far fa-circle text-info"></i>
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
                   <p>Categories</p>
                 </a>
               </li>
               @if(Session::get('page')=="products")
-                <?php $active = "active"; ?>
+                <?php $active = "active"; $text_info = "text-info";?>
               @else
-                  <?php $active = ""; ?>
+                  <?php $active = ""; $text_info = ""?>
               @endif
               <li class="nav-item">
                 <a href="{{ url('admin/products') }}" class="nav-link {{ $active }}">
-                  <i class="nav-icon far fa-circle text-info"></i>
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
                   <p>Products</p>
                 </a>
               </li>

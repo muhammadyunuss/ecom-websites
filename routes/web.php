@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
@@ -74,4 +74,8 @@ Route::prefix('/admin')->namespace('Admin')->group(function(){
         Route::get('delete-image/{id}','ProductsController@deleteImage');
 
     });
+});
+
+Route::namespace('Front')->group(function(){
+    Route::get('/', 'IndexController@index');
 });

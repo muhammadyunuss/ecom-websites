@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Section;
 use App\Product;
 use App\Category;
+use App\Brand;
 use App\ProductsAttribute;
 use App\ProductsImage;
 use Session;
@@ -70,6 +71,7 @@ class ProductsController extends Controller
             // Product Validations
             $rules = [
                 'category_id' => 'required',
+                'brand_id' => 'required',
                 'product_name' => 'required|regex:/^[\pL\s\-]+$/u',
                 'product_code' => 'required|regex:/^[\w-]*$/',
                 'product_price' => 'required|numeric',
@@ -131,10 +133,6 @@ class ProductsController extends Controller
                 $data['product_video'] = "";
             }
 
-            if(empty($data['main_image'])){
-                $data['main_image'] = "";
-            }
-
             if(empty($data['description'])){
                 $data['description'] = "";
             }
@@ -151,8 +149,15 @@ class ProductsController extends Controller
                 $data['product_discount'] = "0";
             }
 
+            if(empty($data['brand_id'])){
+                $data['brand_id'] = "";
+            }
+
             // Upload Product Image
-            if($request->hasFile('main_image')){
+            if(empty($data['main_image'])){
+                $data['main_image'] = "";
+                $product->main_image = $data['main_image'];
+            }else if($request->hasFile('main_image')){
                 $image_tmp = $request->file('main_image');
                 if($image_tmp->isValid()){
                     // Get Original Image Name
@@ -176,7 +181,10 @@ class ProductsController extends Controller
             }
 
             // Upload Product Video
-            if($request->hasFile('product_video')){
+            if(empty($data['product_video'])){
+                $data['product_video'] = "";
+                $product->product_video = $data['product_video'];
+            }else if($request->hasFile('product_video')){
                 $video_tmp = $request->file('product_video');
                 if($video_tmp->isValid()){
                     // Upload Video
@@ -195,6 +203,7 @@ class ProductsController extends Controller
             // echo "<pre>"; print_r($categoryDetails); die;
             $product->section_id = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
+            $product->brand_id = $data['brand_id'];
             $product->product_name = $data['product_name'];
             $product->product_code = $data['product_code'];
             $product->product_color = $data['product_color'];
@@ -228,9 +237,14 @@ class ProductsController extends Controller
         // Section with Categories and Sub Categories
         $categories = Section::with('categories')->get();
         $categories = json_decode(json_encode($categories),true);
+
+        // Get All Brands
+        $brands = Brand::where('status',1)->get();
+        $brands = json_decode(json_encode($brands),true);
+
         // echo "<pre>"; print_r($categories); die;
 
-        return view('admin.products.add_edit_product')->with(compact('title','fabricArray','sleeveArray','patternArray','fitArray','occasionArray','categories','productdata'));
+        return view('admin.products.add_edit_product')->with(compact('title','fabricArray','sleeveArray','patternArray','fitArray','occasionArray','categories','productdata','brands'));
     }
 
     public function deleteProductImage($id){
