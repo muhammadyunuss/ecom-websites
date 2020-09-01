@@ -75,9 +75,12 @@ class CategoryController extends Controller
                 'category_image.image' => 'Valid Image is required',
             ];
             $this->validate($request,$rules,$customMessages);
-        
+
             // Upload Image
-            if($request->hasFile('category_image')){
+            if(empty($data['category_image'])){
+                $data['category_image']="";
+                $category->category_image = $data['category_image'];
+            }else if($request->hasFile('category_image')){
                 $image_tmp = $request->file('category_image');
                 if($image_tmp->isValid()){
                     // Get Image Extension
@@ -91,7 +94,7 @@ class CategoryController extends Controller
                     $category->category_image = $imageName;
                 }
             }
-            
+
 
                 if(empty($data['category_discount'])){
                     $data['category_discount']="0";
@@ -128,7 +131,7 @@ class CategoryController extends Controller
                 session::flash('success_message', $message);
                 return redirect('admin/categories');
             }
-        
+
         // Get All Sections
         $getSections = Section::get();
 

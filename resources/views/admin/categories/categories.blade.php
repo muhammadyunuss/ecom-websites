@@ -64,10 +64,11 @@
                   <td>{{ $parent_category }}</td>
                   <td>{{ $category->section->name }}</td>
                   <td>{{ $category->url }}</td>
-                  <td>@if($category->status==1)
-                    <i class="fas fa-check-circle" style="color: #51cf66;"></i><a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"> Active</a>
+                  <td>
+                    @if($category->status==1)
+                    <a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"><i class="fas fa-toggle-on" aria-hidden="true" style="color:#51cf66;" status="Active"></i></a>
                     @else
-                    <i class="fas fa-times-circle" style="color: #ff6b6b;"></i><a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"> Inactive</a>
+                    <a class="updateCategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}" href="javascript:void(0)"><i class="fas fa-toggle-off" aria-hidden="true" style="color:#ff6b6b;" status="Inactive"></i></a>
                     @endif
                   </td>
                   <td>

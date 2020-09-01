@@ -31,7 +31,7 @@ class ProductsController extends Controller
         if($request->ajax()){
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
-            if($data['status']=="Aktif"){
+            if($data['status']=="Active"){
                 $status = 0;
             }else{
                 $status = 1;
