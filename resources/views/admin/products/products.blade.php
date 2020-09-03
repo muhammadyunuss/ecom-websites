@@ -56,7 +56,7 @@
               <tbody>
                 @foreach($products as $product)
                 @if(!isset($product->parentproduct->product_name))
-                <?php $parent_product = "Utama"; ?>
+                <?php $parent_product = "Root"; ?>
                 @else
                 <?php $parent_product = $product->parentproduct->product_name; ?>
                 @endif

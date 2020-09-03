@@ -37,7 +37,7 @@
               </p>
             </a>
           </li>
-          
+
           @if(Session::get('page')=="settings" || Session::get('page')=="update-admin-details")
               <?php $active = "active"; ?>
           @else
@@ -132,6 +132,17 @@
                 <a href="{{ url('admin/products') }}" class="nav-link {{ $active }}">
                   <i class="nav-icon far fa-circle {{ $text_info }}"></i>
                   <p>Products</p>
+                </a>
+              </li>
+              @if(Session::get('page')=="banners")
+                <?php $active = "active"; $text_info = "text-info";?>
+              @else
+                  <?php $active = ""; $text_info = ""?>
+              @endif
+              <li class="nav-item">
+                <a href="{{ url('admin/banners') }}" class="nav-link {{ $active }}">
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
+                  <p>Banners</p>
                 </a>
               </li>
             </ul>

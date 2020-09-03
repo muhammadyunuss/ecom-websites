@@ -18,7 +18,6 @@ class BrandController extends Controller
     public function updateBrandStatus(Request $request){
         if($request->ajax()){
             $data = $request->all();
-            // echo "<pre>"; print_r($data); die;
             if($data['status']=="Active"){
                 $status = 0;
             }else{
@@ -44,13 +43,12 @@ class BrandController extends Controller
 
         if($request->isMethod('post')){
             $data = $request->all();
-            // dd($data);
 
             // Brand Validations
             $rules = [
                 'brand_name' => 'required|regex:/^[\pL\s\-]+$/u',
             ];
-            $customMessages = [                
+            $customMessages = [
                 'brand_name.required' => 'Brand Name is required',
                 'brand_name.regex' => 'Valid Brand Name is required',
             ];
@@ -62,7 +60,7 @@ class BrandController extends Controller
 
             session::flash('success_message', $message);
             return redirect('admin/brands');
-        }        
+        }
 
         return view('admin.brands.add_edit_brand')->with(compact('title','brand'));
     }

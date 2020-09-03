@@ -22,8 +22,9 @@ $(document).ready(function () {
         })
     });
 
+    // Update Section Status
     $(document).on("click",".updateSectionStatus", function(){
-        var status = $(this).text();
+        var status = $(this).children("i").attr("status");
         var section_id = $(this).attr("section_id");
         $.ajax({
             type: 'post',
@@ -45,6 +46,7 @@ $(document).ready(function () {
         });
     });
 
+    // Update Status Brand
     $(document).on("click",".updateBrandStatus", function(){
         var status = $(this).children("i").attr("status");
         var brand_id = $(this).attr("brand_id");
@@ -60,6 +62,30 @@ $(document).ready(function () {
                     $("#brand-" + brand_id).html("<i class='fas fa-toggle-off' aria-hidden='true' style='color:#ff6b6b;' status='Inactive'></i>");
                 } else if (resp['status'] == 1) {
                     $("#brand-" + brand_id).html("<i class='fas fa-toggle-on' aria-hidden='true' style='color:#51cf66;' status='Active'></i>");
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    });
+
+    // Update Banner Status
+    $(document).on("click",".updateBannerStatus", function(){
+        var status = $(this).children("i").attr("status");
+        var banner_id = $(this).attr("banner_id");
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-banner-status',
+            data: {
+                status: status,
+                banner_id: banner_id
+            },
+            success: function (resp) {
+                if (resp['status'] == 0) {
+                    $("#banner-" + banner_id).html("<i class='fas fa-toggle-off' aria-hidden='true' style='color:#ff6b6b;' status='Inactive'></i>");
+                } else if (resp['status'] == 1) {
+                    $("#banner-" + banner_id).html("<i class='fas fa-toggle-on' aria-hidden='true' style='color:#51cf66;' status='Active'></i>");
                 }
             },
             error: function () {

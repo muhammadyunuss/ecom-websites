@@ -77,10 +77,7 @@ class CategoryController extends Controller
             $this->validate($request,$rules,$customMessages);
 
             // Upload Image
-            if(empty($data['category_image'])){
-                $data['category_image']="";
-                $category->category_image = $data['category_image'];
-            }else if($request->hasFile('category_image')){
+            if($request->hasFile('category_image')){
                 $image_tmp = $request->file('category_image');
                 if($image_tmp->isValid()){
                     // Get Image Extension

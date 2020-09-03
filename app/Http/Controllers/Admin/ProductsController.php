@@ -154,10 +154,7 @@ class ProductsController extends Controller
             }
 
             // Upload Product Image
-            if(empty($data['main_image'])){
-                $data['main_image'] = "";
-                $product->main_image = $data['main_image'];
-            }else if($request->hasFile('main_image')){
+            if($request->hasFile('main_image')){
                 $image_tmp = $request->file('main_image');
                 if($image_tmp->isValid()){
                     // Get Original Image Name

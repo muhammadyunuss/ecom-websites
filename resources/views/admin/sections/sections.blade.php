@@ -43,15 +43,16 @@
                 <tr>
                   <td>{{ $section->id }}</td>
                   <td>{{ $section->name }}</td>
-                  <td>@if($section->status==1)
-                  <i class="fas fa-check-circle" style="color: #51cf66;"></i><a class="updateSectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}" href="javascript:void(0)"> Active</a>
+                  <td>
+                  @if($section->status==1)
+                  <a class="updateSectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}" href="javascript:void(0)"><i class="fas fa-toggle-on" aria-hidden="true" style="color:#51cf66;" status="Active"></i></a>
                   @else
-                  <i class="fas fa-times-circle" style="color: #ff6b6b;"></i><a class="updateSectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}" href="javascript:void(0)"> Inactive</a>
+                  <a class="updateSectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}" href="javascript:void(0)"><i class="fas fa-toggle-off" aria-hidden="true" style="color:#ff6b6b;" status="Inactive"></i></a>
                   @endif
                   </td>
                 </tr>
                 @endforeach
-                
+
                 </tbody>
 
               </table>
