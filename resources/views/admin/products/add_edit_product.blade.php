@@ -64,10 +64,10 @@
                         @foreach($section['categories'] as $category)
                         <option value="{{$category['id']}}" @if(!empty(@old(category_id)) && $category['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$category['id']) @endif>&nbsp;-- {{$category['category_name']}}</option>
                           @foreach($category['subcategories'] as $subcategory)
-                            <option value="{{$subcategory['id']}}"  @if(!empty(@old(category_id)) && $subcategory['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$subcategory['id']) selected="" @endif>&nbsp;&nbsp;--> {{$subcategory['category_name']}}</option>          
-                          @endforeach    
-                        @endforeach    
-                      @endforeach    
+                            <option value="{{$subcategory['id']}}"  @if(!empty(@old(category_id)) && $subcategory['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$subcategory['id']) selected="" @endif>&nbsp;&nbsp;--> {{$subcategory['category_name']}}</option>
+                          @endforeach
+                        @endforeach
+                      @endforeach
                     </select>
                   </div>
                 <div class="form-group">
@@ -77,11 +77,11 @@
                 @if(!empty($productdata['product_image']))
                 <div style="height: 100px;">
                 </div>
-                @endif  
+                @endif
                 <div class="form-group">
                   <label for="product_price">Product Price</label>
                   <input type="text" class="form-control" name="product_price" id="product_price" placeholder="Enter Product Price" @if(!empty($productdata['product_price'])) value="{{ $productdata['product_price'] }}" @else value="{{ old('product_price') }}" @endif>
-                </div>              
+                </div>
                 <!-- /.form-group -->
               </div>
               <div class="col-md-6">
@@ -125,7 +125,7 @@
                       <option value="{{ $pattern }}" @if(!@empty($productdata['pattern']) && $productdata['pattern'] == $pattern) selected="" @endif>{{ $pattern }}</option>
                     @endforeach
                   </select>
-                </div>   
+                </div>
                 <div class="form-group">
                   <label>Select Brand</label>
                   <select name="brand_id" id="brand_id" class="form-control select2" style="width: 100%;">
@@ -134,7 +134,7 @@
                       <option value="{{ $brand['id'] }}" @if(!@empty($productdata['brand_id']) && $productdata['brand_id'] == $brand['id']) selected="" @endif>{{ $brand['name'] }}</option>
                     @endforeach
                   </select>
-                </div>             
+                </div>
                   <div class="form-group">
                     <label for="product_discount">Product Discount</label>
                     <input type="text" class="form-control" name="product_discount" id="product_discount" placeholder="Enter Product Discount" @if(!empty($productdata['product_discount'])) value="{{ $productdata['product_discount'] }}" @else value="{{ old('product_discount') }}" @endif>
@@ -208,7 +208,7 @@
                       <a href="{{url('videos/product_videos/'.$productdata['product_video']) }}" download="">Download</a>
                       &nbsp; | &nbsp;
                     <a class="confirmDelete" href="javascript:void(0)" record="product-video" recordid="{{ $productdata['id'] }}">Hapus Video</a>
-                    </div>                          
+                    </div>
                     @endif
                   </div>
                 <div class="form-group">
