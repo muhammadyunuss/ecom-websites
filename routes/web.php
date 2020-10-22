@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +86,19 @@ Route::prefix('/admin')->namespace('Admin')->group(function(){
 Route::namespace('Front')->group(function(){
     // Home Page ROute
     Route::get('/', 'IndexController@index');
+    
     // Listing Categories Route
-    Route::get('/{url}', 'ProductsController@listing');
+    // Route::get('/{url}', 'ProductsController@listing');
+
+    //Get Category URL
+    $catUrls= Category::select('url')->where('status',1)->get()->pluck('url')->toArray();
+
+    foreach ($catUrls as $url) {
+        Route::get('/'.$url, 'ProductsController@listing');
+    }
+
+    Route::get('/contact-us',function(){
+        echo "test"; die;
+    });
+
 });

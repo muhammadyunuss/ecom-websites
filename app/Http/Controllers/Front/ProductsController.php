@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Front;
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
@@ -10,7 +12,8 @@ use App\Product;
 
 class ProductsController extends Controller
 {
-    public function listing($url, Request $request){
+    public function listing(Request $request){
+        Paginator::useBootstrap();
         if($request->ajax()){
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
@@ -71,12 +74,12 @@ class ProductsController extends Controller
             }
 
         }else{
-
+            $url = Route::getFacadeRoot()->current()->uri();
             $categoryCount = Category::where(['url'=>$url,'status'=>1])->count();
             if($categoryCount>0){
                 $categoryDetails = Category::catDetails($url);
                 $categoryProducts = Product::with('brand')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
-                $categoryProducts = $categoryProducts->paginate(30);
+                $categoryProducts = $categoryProducts->paginate(3);
 
                 // Product Filters
                 $productFilters = Product::productFilters();
