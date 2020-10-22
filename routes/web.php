@@ -86,7 +86,7 @@ Route::prefix('/admin')->namespace('Admin')->group(function(){
 Route::namespace('Front')->group(function(){
     // Home Page ROute
     Route::get('/', 'IndexController@index');
-    
+
     // Listing Categories Route
     // Route::get('/{url}', 'ProductsController@listing');
 
@@ -97,8 +97,5 @@ Route::namespace('Front')->group(function(){
         Route::get('/'.$url, 'ProductsController@listing');
     }
 
-    Route::get('/contact-us',function(){
-        echo "test"; die;
-    });
-
+    Route::get('/product/{id}', 'ProductsController@detail');
 });
