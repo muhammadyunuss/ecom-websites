@@ -8,7 +8,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
-
+use App\ProductsAttribute;
 
 class ProductsController extends Controller
 {
@@ -102,6 +102,16 @@ class ProductsController extends Controller
 
     public function detail($id){
         $productDetails = Product::with('category', 'brand', 'attributes', 'images' )->find($id)->toArray();
-        return view('front.products.detail')->with(compact('productDetails'));
+        $total_stock = ProductsAttribute::where('product_id',$id)->sum('stock');
+        $relatedProducts = Product::where('category_id', $productDetails['category']['id'])->where('id', '!=', $id)->limit(3)->inRandomOrder()->get()->toArray();
+        return view('front.products.detail')->with(compact('productDetails', 'total_stock', 'relatedProducts'));
+    }
+
+    public function getProductPrice(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            $getProductPrice = ProductsAttribute::where(['product_id'=>$data['product_id'],'size'=>$data['size']])->first();
+            return $getProductPrice->price;
+        }
     }
 }

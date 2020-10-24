@@ -5,7 +5,8 @@
 	<title>Stack Developers online Shopping cart</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
-	<meta name="author" content="">
+    <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- Front style -->
 	<link id="callCss" rel="stylesheet" href="{{ url('css/front_css/front.min.css') }}" media="screen"/>
@@ -14,7 +15,7 @@
 	<link href="{{ url('css/front_css/front-responsive.min.css') }}" rel="stylesheet"/>
 	<link href="{{ url('css/front_css/font-awesome.css') }}" rel="stylesheet" type="text/css">
 	<!-- Google-code-prettify -->
-	<link href="{{ url('css/front_css/google-code-prettify/prettify.css') }}" rel="stylesheet"/>
+	<link href="{{ url('js/front_js/google-code-prettify/prettify.css') }}" rel="stylesheet"/>
 	<!-- fav and touch icons -->
 	<link rel="shortcut icon" href="{{url('images/front_images/ico/favicon.ico') }}">
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{url('images/front_images/ico/apple-touch-icon-144-precomposed.png') }}">

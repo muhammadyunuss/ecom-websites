@@ -3,7 +3,7 @@
         @foreach ($categoryProducts as $product)
         <li class="span3">
             <div class="thumbnail">
-                <a href="product_details.html">
+                <a href="{{ url('product/'.$product['id']) }}">
                     @if(isset($product['main_image']))
                     <?php $product_image_path = 'images/product_images/small/'.$product['main_image']; ?>
                     @else

@@ -168,7 +168,7 @@ class ProductsController extends Controller
                     $medium_image_path = 'images/product_images/medium/'.$imageName;
                     $small_image_path = 'images/product_images/small/'.$imageName;
                     // Upload Large Image
-                    Image::make($image_tmp)->save($large_image_path); //W;1040 H:1200
+                    Image::make($image_tmp)->resize(1040,1200)->save($large_image_path); //W;1040 H:1200
                     // Upload Resize Medium and Small Image
                     Image::make($image_tmp)->resize(520,600)->save($medium_image_path);
                     Image::make($image_tmp)->resize(260,300)->save($small_image_path);
@@ -397,7 +397,7 @@ class ProductsController extends Controller
                     $medium_image_path = 'images/product_images/medium/'.$imageName;
                     $small_image_path = 'images/product_images/small/'.$imageName;
                     // Upload Large Image
-                    Image::make($image_tmp)->save($large_image_path); //W;1040 H:1200
+                    Image::make($image_tmp)->resize(1040,1200)->save($large_image_path); //W;1040 H:1200
                     // Upload Resize Medium and Small Image
                     Image::make($image_tmp)->resize(520,600)->save($medium_image_path);
                     Image::make($image_tmp)->resize(260,300)->save($small_image_path);

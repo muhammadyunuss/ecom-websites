@@ -3,26 +3,23 @@
 
 <div class="span9">
     <ul class="breadcrumb">
-        <li><a href="index.html">Home</a> <span class="divider">/</span></li>
-        <li><a href="products.html">Products</a> <span class="divider">/</span></li>
-        <li class="active">product Details</li>
+        <li><a href="{{ url('/') }}">Home</a> <span class="divider">/</span></li>
+        <li><a href="{{ url('/'.$productDetails['category']['url']) }}">{{ $productDetails['category']['category_name'] }}</a> <span class="divider">/</span></li>
+        <li class="active">{{ $productDetails['product_name'] }}</li>
     </ul>
     <div class="row">
         <div id="gallery" class="span3">
-            <a href="themes/images/products/large/f1.jpg" title="Blue Casual T-Shirt">
-                <img src="themes/images/products/large/3.jpg" style="width:100%" alt="Blue Casual T-Shirt"/>
+            <a href="{{ asset('images/product_images/large/'.$productDetails['main_image']) }}" title="Blue Casual T-Shirt">
+                <img src="{{ asset('images/product_images/large/'.$productDetails['main_image']) }}" style="width:100%" alt="Blue Casual T-Shirt"/>
             </a>
             <div id="differentview" class="moreOptopm carousel slide">
                 <div class="carousel-inner">
                     <div class="item active">
-                        <a href="themes/images/products/large/f1.jpg"> <img style="width:29%" src="themes/images/products/large/f1.jpg" alt=""/></a>
-                        <a href="themes/images/products/large/f2.jpg"> <img style="width:29%" src="themes/images/products/large/f2.jpg" alt=""/></a>
-                        <a href="themes/images/products/large/f3.jpg" > <img style="width:29%" src="themes/images/products/large/f3.jpg" alt=""/></a>
-                    </div>
-                    <div class="item">
-                        <a href="themes/images/products/large/f3.jpg" > <img style="width:29%" src="themes/images/products/large/f3.jpg" alt=""/></a>
-                        <a href="themes/images/products/large/f1.jpg"> <img style="width:29%" src="themes/images/products/large/f1.jpg" alt=""/></a>
-                        <a href="themes/images/products/large/f2.jpg"> <img style="width:29%" src="themes/images/products/large/f2.jpg" alt=""/></a>
+                        @foreach ($productDetails['images'] as $image)
+
+                        <a href="{{ asset('images/product_images/large/'.$image['image']) }}"> <img style="width:29%" src="{{ asset('images/product_images/large/'.$image['image']) }}" alt=""/></a>
+                        @endforeach
+
                     </div>
                 </div>
                 <!--
@@ -46,14 +43,14 @@
             <h3>{{ $productDetails['product_name'] }}</h3>
             <small>- {{ $productDetails['brand']['name'] }}</small>
             <hr class="soft"/>
-            <small>100 items in stock</small>
+            <small>{{ $total_stock }} items in stock</small>
             <form class="form-horizontal qtyFrm">
                 <div class="control-group">
-                    <h4>Rp. {{ number_format($productDetails['product_price']) }}</h4>
-                        <select class="span2 pull-left">
-                            <option>Select Size</option>
+                    <h4 class="getAttrPrice" >Rp. {{ number_format($productDetails['product_price']) }}</h4>
+                        <select name="size" id="getPrice" product-id="{{ $productDetails['id'] }}" class="span2 pull-left">
+                            <option value="">Select Size</option>
                             @foreach($productDetails['attributes'] as $attribute)
-                            <option>{{ $attribute['size'] }}</option>
+                            <option value="{{ $attribute['size'] }}">{{ $attribute['size'] }}</option>
                             @endforeach
 
                         </select>
@@ -121,141 +118,34 @@
                     <hr class="soft"/>
                     <div class="tab-content">
                         <div class="tab-pane" id="listView">
+                            @foreach ($relatedProducts as $product)
                             <div class="row">
                                 <div class="span2">
-                                    <img src="themes/images/products/4.jpg" alt=""/>
-                                </div>
-                                <div class="span4">
-                                    <h3>New | Available</h3>
-                                    <hr class="soft"/>
-                                    <h5>Product Name </h5>
-                                    <p>
-                                        Nowadays the lingerie industry is one of the most successful business spheres.We always stay in touch with the latest fashion tendencies -
-                                        that is why our goods are so popular..
-                                    </p>
-                                    <a class="btn btn-small pull-right" href="product_details.html">View Details</a>
-                                    <br class="clr"/>
-                                </div>
-                                <div class="span3 alignR">
-                                    <form class="form-horizontal qtyFrm">
-                                        <h3> Rs.1000</h3>
-                                        <label class="checkbox">
-                                            <input type="checkbox">  Adds product to compair
-                                        </label><br/>
-                                        <div class="btn-group">
-                                            <a href="product_details.html" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
-                                            <a href="product_details.html" class="btn btn-large"><i class="icon-zoom-in"></i></a>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <hr class="soft"/>
-                            <div class="row">
-                                <div class="span2">
-                                    <img src="themes/images/products/5.jpg" alt=""/>
-                                </div>
-                                <div class="span4">
-                                    <h3>New | Available</h3>
-                                    <hr class="soft"/>
-                                    <h5>Product Name </h5>
-                                    <p>
-                                        Nowadays the lingerie industry is one of the most successful business spheres.We always stay in touch with the latest fashion tendencies -
-                                        that is why our goods are so popular..
-                                    </p>
-                                    <a class="btn btn-small pull-right" href="product_details.html">View Details</a>
-                                    <br class="clr"/>
-                                </div>
-                                <div class="span3 alignR">
-                                    <form class="form-horizontal qtyFrm">
-                                        <h3> Rs.1000</h3>
-                                        <label class="checkbox">
-                                            <input type="checkbox">  Adds product to compair
-                                        </label><br/>
-                                        <div class="btn-group">
-                                            <a href="product_details.html" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
-                                            <a href="product_details.html" class="btn btn-large"><i class="icon-zoom-in"></i></a>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <hr class="soft"/>
-                            <div class="row">
-                                <div class="span2">
-                                    <img src="themes/images/products/6.jpg" alt=""/>
-                                </div>
-                                <div class="span4">
-                                    <h3>New | Available</h3>
-                                    <hr class="soft"/>
-                                    <h5>Product Name </h5>
-                                    <p>
-                                        Nowadays the lingerie industry is one of the most successful business spheres.We always stay in touch with the latest fashion tendencies -
-                                        that is why our goods are so popular..
-                                    </p>
-                                    <a class="btn btn-small pull-right" href="product_details.html">View Details</a>
-                                    <br class="clr"/>
-                                </div>
-                                <div class="span3 alignR">
-                                    <form class="form-horizontal qtyFrm">
-                                        <h3> Rs.1000</h3>
-                                        <label class="checkbox">
-                                            <input type="checkbox">  Adds product to compair
-                                        </label><br/>
-                                        <div class="btn-group">
-                                            <a href="product_details.html" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
-                                            <a href="product_details.html" class="btn btn-large"><i class="icon-zoom-in"></i></a>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <hr class="soft"/>
-                            <div class="row">
-                                <div class="span2">
-                                    <img src="themes/images/products/7.jpg" alt=""/>
-                                </div>
-                                <div class="span4">
-                                    <h3>New | Available</h3>
-                                    <hr class="soft"/>
-                                    <h5>Product Name </h5>
-                                    <p>
-                                        Nowadays the lingerie industry is one of the most successful business spheres.We always stay in touch with the latest fashion tendencies -
-                                        that is why our goods are so popular..
-                                    </p>
-                                    <a class="btn btn-small pull-right" href="product_details.html">View Details</a>
-                                    <br class="clr"/>
-                                </div>
-                                <div class="span3 alignR">
-                                    <form class="form-horizontal qtyFrm">
-                                        <h3> Rs.1000</h3>
-                                        <label class="checkbox">
-                                            <input type="checkbox">  Adds product to compair
-                                        </label><br/>
-                                        <div class="btn-group">
-                                            <a href="product_details.html" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
-                                            <a href="product_details.html" class="btn btn-large"><i class="icon-zoom-in"></i></a>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                                    @if(isset($product['main_image']))
+                                    <?php $product_image_path = 'images/product_images/small/'.$product['main_image']; ?>
+                                    @else
+                                    <?php $product_image_path = ''; ?>
+                                    @endif
 
-                            <hr class="soft"/>
-                            <div class="row">
-                                <div class="span2">
-                                    <img src="themes/images/products/8.jpg" alt=""/>
+                                    @if(!empty($product['main_image']) && file_exists($product_image_path))
+                                        <img style="width: 160px" src="{{ asset('images/product_images/small/'.$product['main_image']) }}" alt="">
+                                    @else
+                                        <img style="width: 160px" src="{{ asset('images/product_images/small/no-image.png') }}" alt="">
+                                    @endif
                                 </div>
                                 <div class="span4">
-                                    <h3>New | Available</h3>
+                                    <h3>{{  $product['product_name']  }}</h3>
                                     <hr class="soft"/>
-                                    <h5>Product Name </h5>
+                                    <h5>{{ $product['product_code'] }}</h5>
                                     <p>
-                                        Nowadays the lingerie industry is one of the most successful business spheres.We always stay in touch with the latest fashion tendencies -
-                                        that is why our goods are so popular..
+                                       {{ $product['description'] }}
                                     </p>
-                                    <a class="btn btn-small pull-right" href="product_details.html">View Details</a>
+                                    <a class="btn btn-small pull-right" href="{{ url('product/'.$product['id']) }}">View Details</a>
                                     <br class="clr"/>
                                 </div>
                                 <div class="span3 alignR">
                                     <form class="form-horizontal qtyFrm">
-                                        <h3> Rs.1000</h3>
+                                        <h3> Rp. {{ number_format($product['product_price']) }}</h3>
                                         <label class="checkbox">
                                             <input type="checkbox">  Adds product to compair
                                         </label><br/>
@@ -267,110 +157,36 @@
                                 </div>
                             </div>
                             <hr class="soft"/>
-                            <div class="row">
-                                <div class="span2">
-                                    <img src="themes/images/products/9.jpg" alt=""/>
-                                </div>
-                                <div class="span4">
-                                    <h3>New | Available</h3>
-                                    <hr class="soft"/>
-                                    <h5>Product Name </h5>
-                                    <p>
-                                        Nowadays the lingerie industry is one of the most successful business spheres.We always stay in touch with the latest fashion tendencies -
-                                        that is why our goods are so popular..
-                                    </p>
-                                    <a class="btn btn-small pull-right" href="product_details.html">View Details</a>
-                                    <br class="clr"/>
-                                </div>
-                                <div class="span3 alignR">
-                                    <form class="form-horizontal qtyFrm">
-                                        <h3> Rs.1000</h3>
-                                        <label class="checkbox">
-                                            <input type="checkbox">  Adds product to compair
-                                        </label><br/>
-                                        <div class="btn-group">
-                                            <a href="product_details.html" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
-                                            <a href="product_details.html" class="btn btn-large"><i class="icon-zoom-in"></i></a>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <hr class="soft"/>
+                            @endforeach
                         </div>
                         <div class="tab-pane active" id="blockView">
                             <ul class="thumbnails">
+                                @foreach ($relatedProducts as $product)
                                 <li class="span3">
                                     <div class="thumbnail">
-                                        <a href="product_details.html"><img src="themes/images/products/10.jpg" alt=""/></a>
+                                        <a href="{{ url('product/'.$product['id']) }}">
+                                            @if(isset($product['main_image']))
+                                            <?php $product_image_path = 'images/product_images/small/'.$product['main_image']; ?>
+                                            @else
+                                            <?php $product_image_path = ''; ?>
+                                            @endif
+
+                                            @if(!empty($product['main_image']) && file_exists($product_image_path))
+                                                <img style="width: 160px" src="{{ asset('images/product_images/small/'.$product['main_image']) }}" alt="">
+                                            @else
+                                                <img style="width: 160px" src="{{ asset('images/product_images/small/no-image.png') }}" alt="">
+                                            @endif
+                                        </a>
                                         <div class="caption">
-                                            <h5>Casual T-Shirt</h5>
+                                            <h5> {{ $product['product_name'] }}</h5>
                                             <p>
-                                                Lorem Ipsum is simply dummy text.
+                                                {{ $product['description'] }}
                                             </p>
-                                            <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.1000</a></h4>
+                                            <h4 style="text-align:center"><a class="btn" href="{{ url('product/'.$product['id']) }}"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rp.  {{ number_format($product['product_price']) }}</a></h4>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="span3">
-                                    <div class="thumbnail">
-                                        <a href="product_details.html"><img src="themes/images/products/11.jpg" alt=""/></a>
-                                        <div class="caption">
-                                            <h5>Casual T-Shirt</h5>
-                                            <p>
-                                                Lorem Ipsum is simply dummy text.
-                                            </p>
-                                            <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.1000</a></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="span3">
-                                    <div class="thumbnail">
-                                        <a href="product_details.html"><img src="themes/images/products/12.jpg" alt=""/></a>
-                                        <div class="caption">
-                                            <h5>Casual T-Shirt</h5>
-                                            <p>
-                                                Lorem Ipsum is simply dummy text.
-                                            </p>
-                                            <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.1000</a></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="span3">
-                                    <div class="thumbnail">
-                                        <a href="product_details.html"><img src="themes/images/products/13.jpg" alt=""/></a>
-                                        <div class="caption">
-                                            <h5>Casual T-Shirt</h5>
-                                            <p>
-                                                Lorem Ipsum is simply dummy text.
-                                            </p>
-                                            <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.1000</a></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="span3">
-                                    <div class="thumbnail">
-                                        <a href="product_details.html"><img src="themes/images/products/1.jpg" alt=""/></a>
-                                        <div class="caption">
-                                            <h5>Casual T-Shirt</h5>
-                                            <p>
-                                                Lorem Ipsum is simply dummy text.
-                                            </p>
-                                            <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.1000</a></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="span3">
-                                    <div class="thumbnail">
-                                        <a href="product_details.html"><img src="themes/images/products/2.jpg" alt=""/></a>
-                                        <div class="caption">
-                                            <h5>Casual T-Shirt</h5>
-                                            <p>
-                                                Lorem Ipsum is simply dummy text.
-                                            </p>
-                                            <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.1000</a></h4>
-                                        </div>
-                                    </div>
-                                </li>
+                                @endforeach
                             </ul>
                             <hr class="soft"/>
                         </div>
