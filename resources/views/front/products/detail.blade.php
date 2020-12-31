@@ -1,3 +1,4 @@
+<?php use App\Product; ?>
 @extends('layouts.front_layout.front_layout')
 @section('content')
 
@@ -40,13 +41,37 @@
             </div>
         </div>
         <div class="span6">
+            @if(Session::has('success_message'))
+                <div class="alert alert-success" role="alert">
+                    {{ Session::get('success_message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+            @if(Session::has('error_message'))
+                <div class="alert alert-danger" role="alert">
+                    {{ Session::get('error_message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <h3>{{ $productDetails['product_name'] }}</h3>
             <small>- {{ $productDetails['brand']['name'] }}</small>
             <hr class="soft"/>
             <small>{{ $total_stock }} items in stock</small>
-            <form class="form-horizontal qtyFrm">
+            <form action="{{ url('add-to-cart') }}" method="post" class="form-horizontal qtyFrm">@csrf
+                <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
                 <div class="control-group">
-                    <h4 class="getAttrPrice" >Rp. {{ number_format($productDetails['product_price']) }}</h4>
+                    <?php $discounted_price = Product::getDiscountedPrice($productDetails['id']); ?>
+                    <h4 class="getAttrPrice" >
+                        @if($discounted_price>0)
+                           <del>Rp. {{$productDetails['product_price']}}</del> Rp.{{ $discounted_price }}
+                        @else
+                           Rp. {{$productDetails['product_price']}}
+                        @endif
+                    </h4>
                         <select name="size" id="getPrice" product-id="{{ $productDetails['id'] }}" class="span2 pull-left">
                             <option value="">Select Size</option>
                             @foreach($productDetails['attributes'] as $attribute)
@@ -54,7 +79,7 @@
                             @endforeach
 
                         </select>
-                        <input type="number" class="span1" placeholder="Qty."/>
+                        <input name="quantity" required="" type="number" class="span1" placeholder="Qty."/>
                         <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
                     </div>
                 </div>

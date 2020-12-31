@@ -92,11 +92,26 @@ Route::namespace('Front')->group(function(){
 
     //Get Category URL
     $catUrls= Category::select('url')->where('status',1)->get()->pluck('url')->toArray();
-
     foreach ($catUrls as $url) {
         Route::get('/'.$url, 'ProductsController@listing');
     }
 
+    // Product Detail Route
     Route::get('/product/{id}', 'ProductsController@detail');
+
+    // Get Product Attribute Price
     Route::post('/get-product-price', 'ProductsController@getProductPrice');
+
+    // Add to Cart Route
+    Route::post('/add-to-cart', 'ProductsController@addtoCart');
+
+    // Shooping Cart Route
+    Route::get('/cart', 'ProductsController@cart');
+
+    // Update Cart Item Quantity
+    Route::post('/update-cart-item-qty', 'ProductsController@updateCartItemQty');
+
+    // Delete Cart Item
+    Route::post('/delete-cart-item','ProductsController@deleteCartItem');
+
 });

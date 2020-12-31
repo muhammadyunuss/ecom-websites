@@ -1,3 +1,4 @@
+<?php use App\Product; ?>
 <div class="tab-pane  active" id="blockView">
     <ul class="thumbnails">
         @foreach ($categoryProducts as $product)
@@ -18,13 +19,23 @@
                 </a>
                 <div class="caption">
                     <h5>{{ $product['product_name'] }}</h5>
-                    <p>
-                        <textarea name="" id="" cols="10" rows="2" disabled >{{ $product['description'] }}</textarea>
-                    </p>
+                    <p><textarea name="" id="" cols="10" rows="2" disabled >{{ $product['description'] }}</textarea></p>
                     <p>
                         {{ $product['fabric'] }}
                     </p>
-                    <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rp. {{$product['product_price']}}</a></h4>
+
+                    <h4 style="text-align:center">
+                        <a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a>
+                        <a class="btn btn-primary" href="#">
+                            <?php $discounted_price = Product::getDiscountedPrice($product['id']); ?>
+                            @if($discounted_price>0)
+                            <del>Rp. {{$product['product_price']}}</del>
+                            <font color="yellow">Rp. {{$discounted_price}}</font>
+                            @else
+                                Rp. {{$product['product_price']}}
+                            @endif
+                        </a>
+                    </h4>
                 </div>
             </div>
         </li>
