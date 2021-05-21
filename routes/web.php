@@ -22,7 +22,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::prefix('/admin')->namespace('Admin')->group(function(){
+Route::prefix(' admin')->namespace('Admin')->group(function(){
     // Semua Admin yang akan di definisikan disini :-
 
     Route::match(['get','post'],'/','AdminController@login');
@@ -84,7 +84,7 @@ Route::prefix('/admin')->namespace('Admin')->group(function(){
 });
 
 Route::namespace('Front')->group(function(){
-    // Home Page ROute
+    // Home Page Route
     Route::get('/', 'IndexController@index');
 
     // Listing Categories Route
@@ -114,4 +114,18 @@ Route::namespace('Front')->group(function(){
     // Delete Cart Item
     Route::post('/delete-cart-item','ProductsController@deleteCartItem');
 
+    // Login / Register Page
+    Route::get('/login-register','UsersController@loginRegister');
+
+    // Login User
+    Route::post('/login','UsersController@loginUser');
+
+    // Register User
+    Route::post('/register','UsersController@registerUser');
+
+    // Check if Email already exists
+    ROute::match(['get','post'],'/check-email','UsersController@checkEmail');
+
+    // logout User
+    Route::get('/logout', 'UsersController@logoutUser');
 });

@@ -22,7 +22,14 @@
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{url('images/front_images/ico/apple-touch-icon-114-precomposed.png') }}">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{url('images/front_images/ico/apple-touch-icon-72-precomposed.png') }}">
 	<link rel="apple-touch-icon-precomposed" href="{{url('images/front_images/ico/apple-touch-icon-57-precomposed.png') }}">
-	<style type="text/css" id="enject"></style>
+    <style type="text/css" id="enject"></style>
+    <style>
+        form.cmxform label.error, label.error {
+            /* remove the next line when you have trouble IE with labels in list */
+            color: red;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
     @include('layouts.front_layout.front_header')
@@ -42,6 +49,7 @@
 @include('layouts.front_layout.front_footer')
 <!-- Placed at the end of the document so the pages load faster ============================================= -->
 <script src="{{ url('js/front_js/jquery.js') }}" type="text/javascript"></script>
+<script src="{{ url('js/front_js/jquery.validate.js') }}" type="text/javascript"></script>
 <script src="{{ url('js/front_js/front.min.js') }}" type="text/javascript"></script>
 <script src="{{ url('js/front_js/google-code-prettify/prettify.js') }}"></script>
 
