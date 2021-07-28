@@ -463,4 +463,5 @@ class ProductsController extends Controller
         session::flash('success_message',$message);
         return redirect()->back();
     }
+    
 }

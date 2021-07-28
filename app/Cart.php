@@ -13,9 +13,9 @@ class Cart extends Model
 
     public static function userCartItems(){
         if(Auth::check()){
-            $userCardItems = Cart::with(['product'=>function($query){$query->select('id','product_name','product_code','product_color','main_image');}])->where('user_id',Auth::user()->id)->orderBy('id','Desc')->get()->toArray();
+            $userCardItems = Cart::with(['product'=>function($query){$query->select('id','product_name','category_id','product_code','product_color','main_image');}])->where('user_id',Auth::user()->id)->orderBy('id','Desc')->get()->toArray();
         }else{
-            $userCardItems = Cart::with(['product'=>function($query){$query->select('id','product_name','product_code','product_color','main_image');}])->where('session_id',Session::get('session_id'))->orderBy('id','Desc')->get()->toArray();
+            $userCardItems = Cart::with(['product'=>function($query){$query->select('id','product_name','category_id','product_code','product_color','main_image');}])->where('session_id',Session::get('session_id'))->orderBy('id','Desc')->get()->toArray();
         }
         return $userCardItems;
     }

@@ -10,7 +10,7 @@ $sections = Section::sections();
 			<div class="span6">Welcome!<strong> User</strong></div>
 			<div class="span6">
 				<div class="pull-right">
-					<a href="product_summary.html"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ 3 ] Items in your cart </span> </a>
+					<a href="{{ url('cart') }}"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ <span class="totalCartItems">{{ totalCartItems() }}</span> ] Items in your cart </span> </a>
 				</div>
 			</div>
 		</div>
@@ -50,7 +50,7 @@ $sections = Section::sections();
 		            <input type="text" class="search-query span2" placeholder="Search"/>
 		          </form>
 		          <ul class="nav pull-right">
-		            <li><a href="#">Contact</a></li>
+		            <li><a href="{{ url('orders') }}">Orders</a></li>
                     <li class="divider-vertical"></li>
                     @if(Auth::check())
                         <li><a href="{{ url('account') }}">My Account</a></li>

@@ -94,6 +94,30 @@ $(document).ready(function () {
         });
     });
 
+    // / Update Coupons Status
+    $(document).on("click",".updateCouponStatus", function(){
+        var status = $(this).children("i").attr("status");
+        var coupon_id = $(this).attr("coupon_id");
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-coupon-status',
+            data: {
+                status: status,
+                coupon_id: coupon_id
+            },
+            success: function (resp) {
+                if (resp['status'] == 0) {
+                    $("#coupon-" + coupon_id).html("<i class='fas fa-toggle-off' aria-hidden='true' style='color:#ff6b6b;' status='Inactive'></i>");
+                } else if (resp['status'] == 1) {
+                    $("#coupon-" + coupon_id).html("<i class='fas fa-toggle-on' aria-hidden='true' style='color:#51cf66;' status='Active'></i>");
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    });
+
     // Update Categories Status
     $(document).on("click",".updateCategoryStatus", function(){
         var status = $(this).children("i").attr("status");
@@ -255,5 +279,21 @@ $(document).ready(function () {
             }
         });
     });
+
+    // Show/Hide Coupon FIeld for Manual/Automatic
+    $("#ManualCoupon").click(function(){
+        $("#couponField").show();
+    });
+
+    $("#AutomaticCoupon").click(function(){
+        $("#couponField").hide();
+    });
+
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
 
 });

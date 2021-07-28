@@ -69,7 +69,7 @@
                         @endforeach
                       @endforeach
                     </select>
-                  </div>
+                </div>
                 <div class="form-group">
                   <label for="product_name">Product Name</label>
                   <input type="text" class="form-control" name="product_name" id="product_name" placeholder="Enter Product Name" @if(!empty($productdata['product_name'])) value="{{ $productdata['product_name'] }}" @else value="{{ old('product_name') }}" @endif>

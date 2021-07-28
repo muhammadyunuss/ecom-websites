@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Category;
+use App\Http\Controllers\Front\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,12 @@ Route::prefix(' admin')->namespace('Admin')->group(function(){
         Route::post('update-banner-status','BannersController@updateBannerStatus');
         Route::get('delete-banner/{id}','BannersController@deleteBanner');
 
+        // Coupon
+        Route::get('coupons','CouponsController@coupons');
+        Route::post('update-coupon-status', 'CouponsController@updateCouponsStatus');
+        Route::match(['get', 'post'], 'add-edit-coupon/{id?}', 'CouponsController@addEditCoupon');
+        Route::get('delete-coupon/{id}','CouponsController@deleteCoupon');
+
     });
 });
 
@@ -115,17 +122,55 @@ Route::namespace('Front')->group(function(){
     Route::post('/delete-cart-item','ProductsController@deleteCartItem');
 
     // Login / Register Page
-    Route::get('/login-register','UsersController@loginRegister');
+    Route::get('/login-register',['as' => 'login','uses' => 'UsersController@loginRegister']);
 
     // Login User
     Route::post('/login','UsersController@loginUser');
 
     // Register User
-    Route::post('/register','UsersController@registerUser');
+    Route::post('/register','UsersController@registerUser')->name('registerUser');
 
     // Check if Email already exists
-    ROute::match(['get','post'],'/check-email','UsersController@checkEmail');
+    Route::match(['get','post'],'/check-email','UsersController@checkEmail');
 
     // logout User
     Route::get('/logout', 'UsersController@logoutUser');
+
+    // Confirm Account
+    Route::match(['get', 'post'], '/confirm/{code}', 'UsersController@confirmAccount');
+
+    // Forget Password
+    Route::match(['get', 'post'], '/forgot-password', 'UsersController@forgotPassword');
+
+    Route::middleware(['auth'])->group(function () {
+
+        // User Account
+        Route::match(['get', 'post'], '/account', 'UsersController@account');
+
+        // Users Orders
+        Route::get('/orders','OrdersController@orders');
+
+        // Check User Cuurent Password
+        Route::post('check-user-pwd', 'UsersController@chkUserPassword');
+
+        // Update User Current Password
+        Route::post('/update-user-pwd', 'UsersController@updateUserPassword');
+
+        // Apply Coupon
+        Route::post('/apply-coupon', 'ProductsController@applyCoupon');
+
+        // Checkout
+        Route::match(['get', 'post'], '/check-out', 'ProductsController@checkout');
+
+        // Add/Edit Delivery Address
+        Route::match(['get', 'post'], '/add-edit-delivery-address/{id?}', 'ProductsController@addEditDeliveryAddress');
+
+        // Delete Delivery Address
+        Route::get('/delete-delivery-address/{id}', 'ProductsController@deleteDeliveryAddress');
+
+        // Thanks
+        Route::get('/thanks', 'ProductsController@thanks');
+
+    });
+
 });
