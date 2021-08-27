@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use PhpParser\Node\Expr\FuncCall;
 
 class Product extends Model
 {
@@ -72,5 +73,34 @@ class Product extends Model
             $discount = 0;
         }
         return array('product_price' => $proAttrPrice['price'], 'final_price'=>$final_price, 'discount'=>$discount);
+    }
+
+    public static function getProductImage($product_id){
+        $getProductImage = Product::select('main_image')->where('id',$product_id)->first()->toArray();
+        return $getProductImage['main_image'];
+    }
+
+    public static function getProductStatus($product_id){
+        $getProductStatus = Product::select('status')->where('id',$product_id)->first()->toArray();
+        return $getProductStatus['status'];
+    }
+
+    public static function getProductStock($product_id, $product_size){
+        $getProductStock = ProductsAttribute::where(['product_id' => $product_id, 'size' => $product_size])->first()->toArray();
+        return $getProductStock['stock'];
+    }
+
+    public static function getAttributeCount($product_id, $product_size){
+        $getAttributeCount = ProductsAttribute::select('stock')->where(['product_id'=>$product_id,'size'=>$product_size,'status'=>1])->count();
+        return $getAttributeCount;
+    }
+
+    public static function getCategoryStatus($category_id){
+        $getCategoryStatus = Category::select('status')->where('id',$category_id)->first()->toArray();
+        return $getCategoryStatus['status'];
+    }
+
+    public static function deleteCartProduct($product_id){
+        Cart::where('product_id',$product_id)->delete();
     }
 }

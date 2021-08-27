@@ -16,6 +16,7 @@
                     <th>Payment Method</th>
                     <th>Grandt Total</th>
                     <th>Created on</th>
+                    <th>Action</th>
                 </tr>
                 @foreach ($orders as $order)
                 <tr>
@@ -29,6 +30,9 @@
                         <td>{{ $order['payment_method'] }}</td>
                         <td>{{ $order['grand_total'] }}</td>
                         <td>{{ date('d-m-Y',strtotime($order['created_at'])) }}</td>
+                        <td>
+                            <a style="text-decoration: underline;" href="{{ url('orders/'.$order['id']) }}">View Detail</a>
+                        </td>
                     </tr>
                 </tr>
                     @endforeach

@@ -62,9 +62,9 @@
                       @foreach($categories as $section)
                       <optgroup label="{{ $section['name'] }}"></optgroup>
                         @foreach($section['categories'] as $category)
-                        <option value="{{$category['id']}}" @if(!empty(@old(category_id)) && $category['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$category['id']) @endif>&nbsp;-- {{$category['category_name']}}</option>
+                        <option value="{{$category['id']}}" @if(!empty(@old('category_id')) && $category['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$category['id']) @endif>&nbsp;-- {{$category['category_name']}}</option>
                           @foreach($category['subcategories'] as $subcategory)
-                            <option value="{{$subcategory['id']}}"  @if(!empty(@old(category_id)) && $subcategory['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$subcategory['id']) selected="" @endif>&nbsp;&nbsp;--> {{$subcategory['category_name']}}</option>
+                            <option value="{{$subcategory['id']}}"  @if(!empty(@old('category_id')) && $subcategory['id']==@old('category_id')) selected="" @elseif(!@empty($productdata['category_id']) && $productdata['category_id']==$subcategory['id']) selected="" @endif>&nbsp;&nbsp;--> {{$subcategory['category_name']}}</option>
                           @endforeach
                         @endforeach
                       @endforeach
@@ -138,6 +138,10 @@
                   <div class="form-group">
                     <label for="product_discount">Product Discount</label>
                     <input type="text" class="form-control" name="product_discount" id="product_discount" placeholder="Enter Product Discount" @if(!empty($productdata['product_discount'])) value="{{ $productdata['product_discount'] }}" @else value="{{ old('product_discount') }}" @endif>
+                  </div>
+                  <div class="form-group">
+                    <label for="group_code">Product Code</label>
+                    <input type="text" class="form-control" name="group_code" id="group_code" placeholder="Enter Group Code" @if(!empty($productdata['group_code'])) value="{{ $productdata['group_code'] }}" @else value="{{ old('group_code') }}" @endif>
                   </div>
                   <div class="form-group">
                     <label>Wash Care</label>

@@ -156,6 +156,39 @@
                   <p>Coupons</p>
                 </a>
               </li>
+              @if(Session::get('page')=="orders")
+                <?php $active = "active"; $text_info = "text-info";?>
+              @else
+                  <?php $active = ""; $text_info = ""?>
+              @endif
+              <li class="nav-item">
+                <a href="{{ url('admin/orders') }}" class="nav-link {{ $active }}">
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
+                  <p>Orders</p>
+                </a>
+              </li>
+              @if(Session::get('page')=="users")
+                <?php $active = "active"; $text_info = "text-info";?>
+              @else
+                  <?php $active = ""; $text_info = ""?>
+              @endif
+              <li class="nav-item">
+                <a href="{{ url('admin/users') }}" class="nav-link {{ $active }}">
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
+                  <p>Users</p>
+                </a>
+              </li>
+              @if(Session::get('page')=="shipping-charges")
+                <?php $active = "active"; $text_info = "text-info";?>
+              @else
+                  <?php $active = ""; $text_info = ""?>
+              @endif
+              <li class="nav-item">
+                <a href="{{ url('admin/view-shipping-charges') }}" class="nav-link {{ $active }}">
+                  <i class="nav-icon far fa-circle {{ $text_info }}"></i>
+                  <p>Shipping Charges</p>
+                </a>
+              </li>
             </ul>
           </li>
         </ul>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Category;
+use App\Http\Controllers\Front\PayumoneyController;
 use App\Http\Controllers\Front\UsersController;
 
 /*
@@ -87,6 +88,23 @@ Route::prefix(' admin')->namespace('Admin')->group(function(){
         Route::match(['get', 'post'], 'add-edit-coupon/{id?}', 'CouponsController@addEditCoupon');
         Route::get('delete-coupon/{id}','CouponsController@deleteCoupon');
 
+        // Orders
+        Route::get('orders','OrdersController@orders');
+        Route::get('orders/{id}','OrdersController@orderDetails');
+        Route::post('update-order-status','OrdersController@updateOrderStatus');
+        Route::get('view-order-invoice/{id}','OrdersController@viewOrderInvoice');
+        Route::get('print-pdf-invoice/{id}','OrdersController@printPDFInvoice');
+
+        // Shipping Charges
+        Route::get('view-shipping-charges','ShippingController@viewShippingCharges');
+        Route::match(['get', 'post'], 'edit-shipping-charges/{id}', 'ShippingController@editShippingCharges');
+        Route::post('update-shipping-status','ShippingController@updateShippingStatus');
+
+        // User
+        Route::get('users', 'UsersController@users');
+        Route::post('update-user-status','UsersController@updateUserStatus');
+
+
     });
 });
 
@@ -142,6 +160,12 @@ Route::namespace('Front')->group(function(){
     // Forget Password
     Route::match(['get', 'post'], '/forgot-password', 'UsersController@forgotPassword');
 
+    // Payumoney Transaction Status API
+    Route::get('/payumoney/verify/{id?}','PayumoneyController@payumoneyVerify');
+
+    // Check Delivery Pincode
+    Route::post('/check-pincode','ProductsController@checkPincode');
+
     Route::middleware(['auth'])->group(function () {
 
         // User Account
@@ -149,6 +173,9 @@ Route::namespace('Front')->group(function(){
 
         // Users Orders
         Route::get('/orders','OrdersController@orders');
+
+        // User Order Details
+        Route::get('/orders/{id}','OrdersController@orderDetails');
 
         // Check User Cuurent Password
         Route::post('check-user-pwd', 'UsersController@chkUserPassword');
@@ -164,12 +191,29 @@ Route::namespace('Front')->group(function(){
 
         // Add/Edit Delivery Address
         Route::match(['get', 'post'], '/add-edit-delivery-address/{id?}', 'ProductsController@addEditDeliveryAddress');
-
         // Delete Delivery Address
         Route::get('/delete-delivery-address/{id}', 'ProductsController@deleteDeliveryAddress');
 
         // Thanks
         Route::get('/thanks', 'ProductsController@thanks');
+
+        // Paypal
+        Route::get('/paypal','PaypalController@paypal');
+        // Paypal Success
+        Route::get('/paypal/success','PaypalController@success');
+        // Paypal Fail
+        Route::get('/paypal/fail','PaypalController@fail');
+        // Paypal IPN
+        Route::any('/paypal/ipn','PaypalController@ipn');
+
+        // Payumoney
+        Route::get('/payumoney','PayumoneyController@payumoney');
+        // Payumoney Response
+        Route::get('/payumoney/response', 'PayumoneyController@payumoneyResponse');
+        // Payumoney success
+        Route::get('/payumoney/success','PayumoneyController@success');
+        // Payumoney Fail
+        Route::get('/payumoney/fail','PayumoneyController@fail');
 
     });
 

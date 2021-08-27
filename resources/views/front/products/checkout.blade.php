@@ -32,7 +32,7 @@
             <tr>
                 <td>
                     <div class="control-group" style="float:left; margin-top: -2px; margin-right: 5px">
-                        <input type="radio" id="address{{ $address['id'] }}" name="address_id" value="{{ $address['id'] }}">
+                        <input type="radio" id="address{{ $address['id'] }}" name="address_id" value="{{ $address['id'] }}" shipping_charges="{{ $address['shipping_charges'] }}" total_price="{{ $total_price }}" coupon_amount="{{ Session::get('couponAmount') }}" codpincodeCount="{{ $address['codpincodeCount'] }}" prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}">
                     </div>
                     <div class="control-group">
                         <label class="control-label">
@@ -82,8 +82,8 @@
                 <tr>
                     <td colspan="6" style="text-align:right">Sub Price:	</td>
                     <td> Rp. {{ $total_price }}</td>
-                    </tr>
-                    <tr>
+                </tr>
+                <tr>
                     <td colspan="6" style="text-align:right">Coupon Discount:	</td>
                     <td class="couponAmount">
                         @if (Session::has('couponAmount'))
@@ -92,12 +92,16 @@
                             Rp. 0
                         @endif
                     </td>
-                    </tr>
-                    <tr>
-                    <td colspan="6" style="text-align:right"><strong>TOTAL (Rp.{{ $total_price }} - <span class="couponAmount">Rp.0</span>)=</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="text-align:right">Shipping Charges:	</td>
+                    <td class="shipping_charges"> Rp. 0</td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="text-align:right"><strong>TOTAL (Rp.{{ $total_price }} - <span class="couponAmount">Rp.0</span> + <span class="shipping_charges">Rp.0</span> )=</strong></td>
                     <td class="label label-important" style="display:block"> <strong class="grand_total">Rp.{{ $grand_total = $total_price - Session::get('couponAmount')}} <?php Session::put('grand_total',$grand_total) ?></strong></td>
-                    </tr>
-                </tbody>
+                </tr>
+            </tbody>
         </table>
 
         <table class="table table-bordered">
@@ -107,8 +111,13 @@
                         <div class="control-group">
                             <label class="control-label"><strong> PAYMENT METHOD: </strong> </label>
                             <div class="controls">
-                                <input type="radio" name="payment_gateway" id="COD" value="COD"><strong> COD</strong>&nbsp;&nbsp;
-                                <input type="radio" name="payment_gateway" id="Paypal" value="Paypal"><strong> Paypal</strong>
+                                <span class="codMethod">
+                                    <input type="radio" name="payment_gateway" id="COD" value="COD"><strong> COD</strong>&nbsp;&nbsp;
+                                </span>
+                                <span class="prepaidMethod">
+                                    <input type="radio" name="payment_gateway" id="Paypal" value="Paypal"><strong> Paypal</strong>
+                                    <input type="radio" name="payment_gateway" id="Payumoney" value="Payumoney"><strong> PayUMoney</strong>
+                                </span>
                             </div>
                         </div>
                     </td>

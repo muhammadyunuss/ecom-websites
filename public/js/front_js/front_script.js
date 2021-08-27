@@ -385,4 +385,48 @@ $(document).ready(function(){
         }
     });
 
+    $("input[name=address_id]").bind('change',function(){
+        var shipping_charges = $(this).attr("shipping_charges");
+        var total_price = $(this).attr("total_price");
+        var coupon_amount = $(this).attr("coupon_amount");
+        var codpincodeCount = $(this).attr("codpincodeCount");
+        var prepaidpincodeCount = $(this).attr("prepaidpincodeCount");
+
+        if(codpincodeCount>0){
+            $(".codMethod").show();
+        }else{
+            $(".codMethod").hide();
+        }
+
+        if(prepaidpincodeCount>0){
+            $(".prepaidMethod").show();
+        }else{
+            $(".prepaidMethod").hide();
+        }
+
+        if(coupon_amount==""){
+            coupon_amount = 0;
+        }
+        $(".shipping_charges").html("Rp."+shipping_charges);
+        var grand_total =parseInt(total_price) + parseInt(shipping_charges) - parseInt(coupon_amount);
+        $(".grand_total").html("Rp."+grand_total);
+    });
+
+    $("#checkPincode").click(function(){
+        var pincode = $("#pincode").val();
+        if(pincode==""){
+            alert("Please enter delivery pincode"); return false;
+        }
+        $.ajax({
+            type:'post',
+            data:{pincode:pincode},
+            url:'/check-pincode',
+            success:function(resp){
+                alert(resp);
+            },error:function(){
+                alert("Error");
+            }
+        });
+    });
+
 });

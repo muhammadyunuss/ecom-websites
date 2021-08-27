@@ -42,12 +42,13 @@
         </div>
         <div class="span6">
             @if(Session::has('success_message'))
-                <div class="alert alert-success" role="alert">
-                    {{ Session::get('success_message') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+            <div class="alert alert-success" role="alert">
+                {{ Session::get('success_message') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <?php Session::forget('success_message'); ?>
             @endif
             @if(Session::has('error_message'))
                 <div class="alert alert-danger" role="alert">
@@ -56,10 +57,21 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <?php Session::forget('error_message'); ?>
             @endif
             <h3>{{ $productDetails['product_name'] }}</h3>
             <small>- {{ $productDetails['brand']['name'] }}</small>
             <hr class="soft"/>
+            @if (count($groupProducts)>0)
+                <div>
+                    <div><strong>More Colors</strong></div>
+                    @foreach ($groupProducts as $product)
+                        <div style="margin-top:5px">
+                            <a href="{{ url('product/'.$product['id']) }}"><img style="width: 50px" src="{{ asset('images/product_images/small/'.$product['main_image']) }}" alt=""></a>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
             <small>{{ $total_stock }} items in stock</small>
             <form action="{{ url('add-to-cart') }}" method="post" class="form-horizontal qtyFrm">@csrf
                 <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
@@ -77,10 +89,11 @@
                             @foreach($productDetails['attributes'] as $attribute)
                             <option value="{{ $attribute['size'] }}">{{ $attribute['size'] }}</option>
                             @endforeach
-
                         </select>
                         <input name="quantity" required="" type="number" class="span1" placeholder="Qty."/>
-                        <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
+                        <button type="submit" class="btn btn-large btn-primary pull-right"> Delivery <i class=" icon-shopping-cart"></i></button><br><br>
+                        <input style="width: 120px;" name="pincode" id="pincode" required="" type="text" class="span1" placeholder="Check Pincode"/>
+                        <button id="checkPincode" type="button" class="btn btn-large btn-primary pull-right">GO</button>
                     </div>
                 </div>
             </form>

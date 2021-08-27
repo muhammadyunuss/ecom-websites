@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use Auth;
 use Session;
 use DB;
-use App\{Category, Product, ProductsAttribute, Cart, Country, Coupon, DeliveryAddress, Order, OrdersProduct, User};
+use App\{Category, Product, ProductsAttribute, Cart, Country, Coupon, DeliveryAddress, Sms,Order, OrdersProduct, ShippingCharge, User};
+use Illuminate\Support\Facades\Mail;
 
 class ProductsController extends Controller
 {
@@ -106,7 +107,11 @@ class ProductsController extends Controller
         $productDetails = Product::with(['category', 'brand', 'attributes'=>function($query){$query->where('status',1);}, 'images'])->find($id)->toArray();
         $total_stock = ProductsAttribute::where('product_id',$id)->sum('stock');
         $relatedProducts = Product::where('category_id', $productDetails['category']['id'])->where('id', '!=', $id)->limit(3)->inRandomOrder()->get()->toArray();
-        return view('front.products.detail')->with(compact('productDetails', 'total_stock', 'relatedProducts'));
+        $groupProducts = array();
+        if(!empty($productDetails['group_code'])){
+            $groupProducts = Product::select('id','main_image')->where('id','!=',$id)->where(['group_code' => $productDetails['group_code'],'status'=>1])->get()->toArray();
+        }
+        return view('front.products.detail')->with(compact('productDetails', 'total_stock', 'relatedProducts','groupProducts'));
     }
 
     public function getProductPrice(Request $request){
@@ -250,6 +255,8 @@ class ProductsController extends Controller
             if($couponCount==0){
                 $userCartItems = Cart::userCartItems();
                 $totalCartItems = totalCartItems();
+                Session::forget('couponCode');
+                Session::forget('couponAmount');
                 return response()->json([
                     'status'=>false,
                     'message'=>'This coupon is not valid',
@@ -272,6 +279,15 @@ class ProductsController extends Controller
                 $current_date = date('Y-m-d');
                 if($expiry_date < $current_date){
                     $message = "This coupon is expired!";
+                }
+
+                // Check if coupon is for single or Multiple Times
+                if($couponDetails->coupon_type == "Single Times"){
+                    // Check in Orders table if coupon already availed by the user
+                    $couponCount = Order::qhere(['coupon_code' => $data['code'],'user_id'=>Auth::user()->id])->count();
+                    if($couponCount >= 1){
+                        $message = "This coupon code is already availed by you!";
+                    }
                 }
 
                 // Check if coupon is from selected categories
@@ -351,8 +367,74 @@ class ProductsController extends Controller
 
     public function checkout(Request $request){
 
+        $userCartItems = Cart::userCartItems();
+        if(count($userCartItems)==0){
+            $message = "Shopping cart is empty! Please Add products to chekcout";
+            Session::put('error_message',$message);
+            return redirect('cart');
+        }
+
+        $total_price = 0;
+        $total_weight = 0;
+        foreach($userCartItems as $item){
+            $prodcut_weight = $item['product']['product_weight'];
+            $total_weight = $total_weight + $prodcut_weight;
+            $attrPrice = Product::getDiscountedAttrPrice($item['product_id'],$item['size']);
+            $total_price = $total_price + ($attrPrice['final_price'] * $item['quantity']);
+        }
+
+        $deliveryAddresses = DeliveryAddress::deliveryAdress();
+        foreach ($deliveryAddresses as $key => $value){
+            $shippingCharges = ShippingCharge::getShippingCharges($total_weight, $value['country']);
+            $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
+            // Check if delivery Pincode exist in COD pincodes list
+            $deliveryAddresses[$key]['codpincodeCount'] = DB::table('cod_pincodes')->where('pincode',$value['pincode'])->count();
+            // Check ifndelivery Pincode exists in Prepaid Pincodes list
+            $deliveryAddresses[$key]['prepaidpincodeCount'] = DB::table('prepaid_pincodes')->where('pincode', $value['pincode'])->count();
+        }
+
         if($request->isMethod('post')){
             $data = $request->all();
+
+            // Website Security Checks
+
+            // Fetch User Cart Items
+            foreach($userCartItems as $key => $cart){
+                // Prevent Disabled product to Order
+                $product_status = Product::getProductStatus($cart['product_id']);
+                if($product_status==0){
+                    // Product::deleteCartProduct($cart['product_id']);
+                    $message = $cart['product']['product_name']." is not available so removed from Cart";
+                    session::flash('error_message',$message);
+                    return redirect('/cart');
+                }
+                // Prevent Out of Stock Products to Order
+                $product_stock = Product::getProductStock($cart['product_id'], $cart['size']);
+                if($product_stock==0){
+                    // Product::deleteCartProduct($cart['product_id']);
+                    $message = $cart['product']['product_name']." is not available so removed from Cart";
+                    session::flash('error_message',$message);
+                    return redirect('/cart');
+                }
+
+                // Prevent Disabled or Delete Attribute
+                $getAttributeCount = Product::getAttributeCount($cart['product_id'],$cart['size']);
+                if($getAttributeCount==0){
+                    // Product::deleteCartProduct($cart['product_id']);
+                    $message = $cart['product']['product_name']." is not available so removed from Cart";
+                    session::flash('error_message',$message);
+                    return redirect('/cart');
+                }
+
+                // Prevent Disabled Categories Products to Order
+                $category_status = Product::getCategoryStatus($cart['product']['category_id']);
+                if($category_status==0){
+                    // Product::deleteCartProduct($cart['product_id']);
+                    $message = $cart['product']['product_name']." is not available so removed from Cart";
+                    session::flash('error_message',$message);
+                    return redirect('/cart');
+                }
+            }
             if(empty($data['address_id'])){
                 $message = "Please select Delivery Address!";
                 session::flash('error_message',$message);
@@ -366,13 +448,23 @@ class ProductsController extends Controller
 
             if($data['payment_gateway']=="COD"){
                 $payment_method = "COD";
+                $order_status = "New";
             }else{
-                echo "Coming Soon!"; die;
                 $payment_method = "Prepaid";
+                $order_status = "Pending";
             }
 
             // Get Delivery Address from address_id
             $deliveryAddress = DeliveryAddress::where('id',$data['address_id'])->first()->toArray();
+
+            // Get shipping charges
+            $shipping_charges = ShippingCharge::getShippingCharges($total_weight, $deliveryAddress['country']);
+
+            // Grand Total
+            $grand_total = $total_price + $shipping_charges - Session::get('couponAmount');
+
+            // Insert Grand Total
+            Session::put('grand_total',$grand_total);
 
             DB::beginTransaction();
 
@@ -387,10 +479,10 @@ class ProductsController extends Controller
             $order->pincode = $deliveryAddress['pincode'];
             $order->mobile = $deliveryAddress['mobile'];
             $order->email = Auth::user()->email;
-            $order->shipping_charges = 0;
+            $order->shipping_charges = $shipping_charges;
             $order->coupon_code = Session::get('couponCode');
             $order->coupon_amount = Session::get('couponAmount');
-            $order->order_status = "New";
+            $order->order_status = $order_status;
             $order->payment_method = $payment_method;
             $order->payment_gateway = $data['payment_gateway'];
             $order->grand_total = Session::get('grand_total');
@@ -416,6 +508,13 @@ class ProductsController extends Controller
                 $cartItem->product_price = $getDiscountAttrPrice['final_price'];
                 $cartItem->product_qty = $item['quantity'];
                 $cartItem->save();
+
+                if($data['payment_gateway']=="COD"){
+                    // Reduce Stock Script Starts
+                    $getProductStock = ProductsAttribute::where(['product_id'=>$item['product_id'],'size'=>$item['size']])->first()->toArray();
+                    $newStock = $getProductStock['stock'] - $item['quantity'];
+                    ProductsAttribute::where(['product_id'=>$item['product_id'],'size'=>$item['size']])->update(['stock' => $newStock]);
+                }
             }
 
             // Insert Order id in Session Variable
@@ -424,15 +523,39 @@ class ProductsController extends Controller
             DB::commit();
 
             if($data['payment_gateway']=="COD"){
+
+                // Send Order SMS
+                // $message = "Dear CUstomer, your order ".$order_id."has been successfully placed with Ecom. We will intimate you once your order is shipped.";
+                // $mobile = Auth::user()->mobile;
+                // Sms::sendSms($message,$mobile);
+
+                $orderDetails = Order::with('orders_products')->where('id',$order_id)->first()->toArray();
+
+                // Send Order Email
+                // $email = Auth::user()->email;
+                // $messageData = [
+                //     'email' => $email,
+                //     'name' => Auth::user()->name,
+                //     'order_id' => $order_id,
+                //     'orderDetails' => $orderDetails
+                // ];
+                // Mail::send('emails.order',$messageData,function($message) use($email){
+                //     $message->to($email)->subject('Order Placed - Ecom');
+                // });
+
                 return redirect('/thanks');
+            }else if($data['payment_gateway'] =="Paypal"){
+                return redirect('paypal');
+            } if($data['payment_gateway'] =="Payumoney"){
+                return redirect('payumoney');
             }else{
-                echo "Prepadi Method Coming Soon"; die;
+                echo "Prepare Method Coming Soon"; die;
             }
 
+
         }
-        $userCartItems = Cart::userCartItems();
-        $deliveryAddresses = DeliveryAddress::deliveryAdress();
-        return view('front.products.checkout')->with(compact('userCartItems', 'deliveryAddresses'));
+
+        return view('front.products.checkout')->with(compact('userCartItems', 'deliveryAddresses', 'total_price'));
     }
 
     public function thanks(){
@@ -445,7 +568,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function addEditDeliveryAddress($id=null,Request $request){
+    public function addEditDeliveryAddress(int $id=null,Request $request){
 
         if($id==""){
             // Add Delivery Address
@@ -512,6 +635,26 @@ class ProductsController extends Controller
         $message = "Delivery Address deleted successfully!";
         Session::put('success_message', $message);
         return redirect()->back();
+    }
+
+    public function checkPincode(Request $request){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>"; print_r($data); die;
+            if(\is_numeric($data['pincode']) && $data['pincode'] > 0 && $data['pincode']==round($data['pincode'], 0)){
+
+                $codPincodeCount = DB::table('cod_pincodes')->where('pincode',$data['pincode'])->count();
+                $prePaidpincodeCount = DB::table('prepaid_pincodes')->where('pincode', $data['pincode'])->count();
+
+                if($codPincodeCount==0 && $prePaidpincodeCount == 0){
+                    echo "This pincode is not available for delivery"; die;
+                }else{
+                    echo "This pincode is available for delivery"; die;
+                }
+            } else {
+                echo "Please enter valid pincode"; die;
+            }
+        }
     }
 
 

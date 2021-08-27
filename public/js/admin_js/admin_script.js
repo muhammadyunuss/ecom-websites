@@ -11,7 +11,7 @@ $(document).ready(function () {
             },
             success: function (resp) {
                 if (resp == "false") {
-                    $("#chkCurrentPwd").html("<font color=red>Current Password is incorrect</font>");
+                    $("#chk CurrentPwd").html("<font color=red>Current Password is incorrect</font>");
                 } else if (resp == "true") {
                     $("#chkCurrentPwd").html("<font color=green>Current Password is correct</font>");
                 }
@@ -27,6 +27,9 @@ $(document).ready(function () {
         var status = $(this).children("i").attr("status");
         var section_id = $(this).attr("section_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-section-status',
             data: {
@@ -51,6 +54,9 @@ $(document).ready(function () {
         var status = $(this).children("i").attr("status");
         var brand_id = $(this).attr("brand_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-brand-status',
             data: {
@@ -75,6 +81,9 @@ $(document).ready(function () {
         var status = $(this).children("i").attr("status");
         var banner_id = $(this).attr("banner_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-banner-status',
             data: {
@@ -99,6 +108,9 @@ $(document).ready(function () {
         var status = $(this).children("i").attr("status");
         var coupon_id = $(this).attr("coupon_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-coupon-status',
             data: {
@@ -118,11 +130,68 @@ $(document).ready(function () {
         });
     });
 
+    // / Update Users Status
+    $(document).on("click",".updateUserStatus", function(){
+        var status = $(this).children("i").attr("status");
+        var user_id = $(this).attr("user_id");
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+            type: 'post',
+            url: '/admin/update-user-status',
+            data: {
+                status: status,
+                user_id: user_id
+            },
+            success: function (resp) {
+                if (resp['status'] == 0) {
+                    $("#user-" + user_id).html("<i class='fas fa-toggle-off' aria-hidden='true' style='color:#ff6b6b;' status='Inactive'></i>");
+                } else if (resp['status'] == 1) {
+                    $("#user-" + user_id).html("<i class='fas fa-toggle-on' aria-hidden='true' style='color:#51cf66;' status='Active'></i>");
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    });
+
+    // Update Shipping Charges Status
+    $(document).on("click",".updateShippingStatus", function(){
+        var status = $(this).children("i").attr("status");
+        var shipping_id = $(this).attr("shipping_id");
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+            type: 'post',
+            url: '/admin/update-shipping-status',
+            data: {
+                status: status,
+                shipping_id: shipping_id
+            },
+            success: function (resp) {
+                if (resp['status'] == 0) {
+                    $("#shipping-" + shipping_id).html("<i class='fas fa-toggle-off' aria-hidden='true' style='color:#ff6b6b;' status='Inactive'></i>");
+                } else if (resp['status'] == 1) {
+                    $("#shipping-" + shipping_id).html("<i class='fas fa-toggle-on' aria-hidden='true' style='color:#51cf66;' status='Active'></i>");
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    });
+
     // Update Categories Status
     $(document).on("click",".updateCategoryStatus", function(){
         var status = $(this).children("i").attr("status");
         var category_id = $(this).attr("category_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-category-status',
             data: {
@@ -147,6 +216,9 @@ $(document).ready(function () {
         var status = $(this).children("i").attr("status");
         var product_id = $(this).attr("product_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-product-status',
             data: {
@@ -171,6 +243,9 @@ $(document).ready(function () {
         var status = $(this).text();
         var attribute_id = $(this).attr("attribute_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-attribute-status',
             data: {
@@ -195,6 +270,9 @@ $(document).ready(function () {
         var status = $(this).text();
         var image_id = $(this).attr("image_id");
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
             type: 'post',
             url: '/admin/update-image-status',
             data: {
@@ -295,5 +373,18 @@ $(document).ready(function () {
     $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
     //Money Euro
     $('[data-mask]').inputmask()
+
+    // Show Courier Name adn Tracking Number in case of Shipped Order Status
+    $("#courier_name").hide();
+    $("#tracking_number").hide();
+    $('#order_status').on("change", function(){
+        if(this.value=="Shipped"){
+            $("#courier_name").show();
+            $("#tracking_number").show();
+        }else{
+            $("#courier_name").hide();
+            $("#tracking_number").hide();
+        }
+    });
 
 });
